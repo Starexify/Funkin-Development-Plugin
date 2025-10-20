@@ -4,6 +4,8 @@ plugins {
     id("org.jetbrains.intellij.platform") version "2.7.1"
 }
 
+val htkVersion: String by project
+
 group = "com.example"
 version = "1.0-SNAPSHOT"
 
@@ -22,7 +24,7 @@ dependencies {
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
 
         // Add necessary plugin dependencies for compilation here, example:
-        // bundledPlugin("com.intellij.java")
+        plugin("com.intellij.plugins.haxe:$htkVersion")
     }
 }
 

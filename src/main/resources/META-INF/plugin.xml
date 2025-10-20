@@ -4,7 +4,7 @@
 
     <!-- Public plugin name should be written in Title Case.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
-    <name>FunkinDevPlugin</name>
+    <name>Funkin Development</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor url="https://www.yourcompany.com">YourCompany</vendor>
@@ -19,16 +19,11 @@
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.plugins.haxe</depends>
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
 
     </extensions>
-
-    <actions>
-        <action id="generateLibraries" class="actions.GenerateLibs" text="Generate Libraries">
-            <add-to-group group-id="ToolsMenu" anchor="first"></add-to-group>
-        </action>
-    </actions>
 </idea-plugin>
