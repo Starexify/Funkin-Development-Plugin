@@ -25,7 +25,7 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <fileType implementationClass="com.nova.funkindevplugin.HaxeScriptFileType"
-                  name="Haxe Script"
+                  name="Haxe Script File"
                   extensions="hxc"
                   language="Haxe"/>
         <newProjectWizard.languageGenerator implementation="com.nova.funkindevplugin.projects.VSliceNewProjectWizard"/>
