@@ -30,4 +30,10 @@
                   language="Haxe"/>
         <newProjectWizard.languageGenerator implementation="com.nova.funkindevplugin.projects.VSliceNewProjectWizard"/>
     </extensions>
+
+    <extensionPoints>
+        <extensionPoint name="vslice.buildSystem"
+                        interface="com.nova.funkindevplugin.projects.BuildSystemVSliceNewProjectWizard"
+                        dynamic="true"/>
+    </extensionPoints>
 </idea-plugin>
