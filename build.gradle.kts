@@ -1,12 +1,12 @@
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.1.0"
-    id("org.jetbrains.intellij.platform") version "2.7.1"
+    id("org.jetbrains.intellij.platform") version "2.10.5"
 }
 
 val htkVersion: String by project
 
-group = "com.example"
+group = "com.nova"
 version = "1.0-SNAPSHOT"
 
 repositories {
