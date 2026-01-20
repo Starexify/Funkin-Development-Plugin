@@ -21,7 +21,7 @@ class VSliceNewProjectWizard : LanguageGeneratorNewProjectWizard {
     class Step(parent: NewProjectWizardStep) :
         AbstractNewProjectWizardStep(parent) {
         override fun setupProject(project: Project) {
-            val moduleType = ModuleTypeManager.getInstance().findByID("HAXE_MODULE")
+            val moduleType = ModuleTypeManager.getInstance().findByID("HAXE_SCRIPT_MODULE")
             val builder = moduleType.createModuleBuilder()
             setupProjectFromBuilder(project, builder)
         }

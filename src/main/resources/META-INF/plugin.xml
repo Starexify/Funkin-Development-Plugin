@@ -29,6 +29,7 @@
                   extensions="hxc"
                   language="Haxe"/>
         <newProjectWizard.languageGenerator implementation="com.nova.funkindevplugin.projects.VSliceNewProjectWizard"/>
+        <moduleType id="VSLICE_MODULE_TYPE" implementationClass="com.nova.funkindevplugin.module.VSliceModuleType"/>
         <internalFileTemplate name="Module.hxc"/>
         <internalFileTemplate name="Empty.hxc"/>
         <internalFileTemplate name="Song.hxc"/>

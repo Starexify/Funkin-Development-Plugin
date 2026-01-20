@@ -1,22 +1,24 @@
 package com.nova.funkindevplugin.module
 
-/*
-class HaxeScriptModuleType : ModuleType<HaxeModuleBuilder>(TYPE_ID) {
-    companion object {
-        const val TYPE_ID = "HAXE_SCRIPT_MODULE"
-    }
+import com.intellij.openapi.module.ModuleType
+import com.intellij.openapi.module.ModuleTypeManager
+import icons.VSliceIcons
+import org.jetbrains.annotations.Nls
+import javax.swing.Icon
 
-    override fun createModuleBuilder(): HaxeModuleBuilder {
-        TODO("Not yet implemented")
-    }
+class VSliceModuleType : ModuleType<VSliceModuleBuilder>(TYPE_ID) {
+  companion object {
+    const val TYPE_ID = "HAXE_SCRIPT_MODULE"
 
-    override fun getName(): @Nls(capitalization = Nls.Capitalization.Title) String {
-        TODO("Not yet implemented")
-    }
+    val INSTANCE: VSliceModuleType
+      get() = ModuleTypeManager.getInstance().findByID(TYPE_ID) as VSliceModuleType
+  }
 
-    override fun getDescription(): @Nls(capitalization = Nls.Capitalization.Sentence) String {
-        TODO("Not yet implemented")
-    }
+  override fun createModuleBuilder(): VSliceModuleBuilder = VSliceModuleBuilder()
 
-    override fun getNodeIcon(isOpened: Boolean): Icon = HaxeIcons.HAXE_LOGO
-}*/
+  override fun getName(): @Nls(capitalization = Nls.Capitalization.Title) String = "V-Slice Mod"
+
+  override fun getDescription(): @Nls(capitalization = Nls.Capitalization.Sentence) String = "Create a new V-Slice mod."
+
+  override fun getNodeIcon(isOpened: Boolean): Icon = VSliceIcons.POLYMOD_LOGO
+}
