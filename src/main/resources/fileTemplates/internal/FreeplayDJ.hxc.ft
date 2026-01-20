@@ -1,0 +1,12 @@
+import funkin.ui.freeplay.dj.ScriptedBaseCharacter;
+
+/**
+ * You can replace `ScriptedAnimateAtlasFreeplayDJ` class with the corresponding dj render type:
+ * `ScriptedSparrowFreeplayDJ`, `ScriptedMultiSparrowFreeplayDJ`, `ScriptedPackerFreeplayDJ`
+ */
+class ${NAME} extends ScriptedAnimateAtlasFreeplayDJ {
+  public function new() {
+    // Replace the `charId` with your character id (character file name) !
+    super(x, y, "charId");
+  }
+}

@@ -15,39 +15,13 @@ class NewVSliceFileAction :
     builder.setTitle(VSliceBundle.message("vslice.new.class.title"))
 
     val kinds = listOf(
-      "Module",
-      "NoteKind",
-      "Level",
-      "Stage",
-      "Song",
-      "SongEvent",
-      "NoteStyle",
-      "Strumline",
-      "Conversation",
-      "Speaker",
-      "DialogueBox",
-      "PlayableCharacter",
-      "Bopper",
-      "StageProp",
-      "FunkinSprite",
-      "Character",
-      "BackingCard",
-      "StickerPack",
-      "FreeplayStyle",
-      "FreeplayDJ",
-      "Album",
-      "MusicBeatState",
-      "MusicBeatSubState",
-      "FlxRuntimeShader",
-      "FlxSprite",
-      "FlxStrip",
-      "FlxBasic",
-      "FlxObject",
-      "FlxTypedSpriteGroup",
-      "FlxTypedGroup",
-      "FlxState",
-      "FlxSubState",
-      "FlxTransitionableState"
+      // From most used to the least used classes
+      "Module", "Empty", "Song", "Stage", "Level", "SongEvent", "NoteKind",
+      "Conversation", "DialogueBox",
+      "FunkinSprite", "Character", "PlayableCharacter",
+      "BackingCard", "FreeplayDJ",
+      "MusicBeatState", "MusicBeatSubState",
+      "FlxRuntimeShader"
     )
 
     kinds.forEach { kind ->

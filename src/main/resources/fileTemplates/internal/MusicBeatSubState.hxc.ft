@@ -1,0 +1,11 @@
+import funkin.ui.ScriptedMusicBeatSubState;
+
+class ${NAME} extends ScriptedMusicBeatSubState {
+  override public function create() {
+    super.create();
+  }
+
+  override function update(elapsed:Float) {
+    super.update(elapsed);
+  }
+}

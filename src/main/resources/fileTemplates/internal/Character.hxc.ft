@@ -1,0 +1,14 @@
+import funkin.play.character.ScriptedBaseCharacter;
+
+/**
+ * You can replace `ScriptedBaseCharacter` class with the corresponding character render type:
+ * `ScriptedSparrowCharacter`, `ScriptedMultiSparrowCharacter`, `ScriptedMultiAnimateAtlasCharacter`,
+ * `ScriptedPackerCharacter`, `ScriptedAnimateAtlasCharacter`
+ */
+class ${NAME} extends ScriptedBaseCharacter {
+  public function new() {
+    // Replace the `charID` with your character id (character file name) !
+    // Replace the `custom` with your corresponding character render type string !
+    super("charID", "custom");
+  }
+}

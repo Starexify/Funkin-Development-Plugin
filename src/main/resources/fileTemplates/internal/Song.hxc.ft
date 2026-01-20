@@ -1,0 +1,10 @@
+import funkin.play.song.ScriptedSong;
+
+class ${NAME} extends ScriptedSong {
+  public function new() {
+    // Replace the `songID` with your song id (song folder name) !
+    // If you want the song script to be variation-specific change the variation "default" string to your variation
+    // If not, remove it so the script is applied across all variations
+    super("songID", { variation: "default" });
+  }
+}

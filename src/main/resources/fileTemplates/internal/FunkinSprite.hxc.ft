@@ -1,0 +1,7 @@
+import funkin.graphics.ScriptedFunkinSprite;
+
+class ${NAME} extends ScriptedFunkinSprite {
+  public function new(?x:Float = 0, ?y:Float = 0, ?path:String, ?atlasSettings:AtlasSpriteSettings) {
+    super(x, y);
+  }
+}

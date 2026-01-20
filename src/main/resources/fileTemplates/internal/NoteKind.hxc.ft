@@ -2,6 +2,6 @@ import funkin.play.notes.notekind.ScriptedNoteKind;
 
 class ${NAME} extends ScriptedNoteKind {
   public function new() {
-    super("${NAME}");
+    super("${NAME}", "My Note Kind");
   }
 }

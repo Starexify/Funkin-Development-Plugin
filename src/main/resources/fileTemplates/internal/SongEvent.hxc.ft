@@ -1,0 +1,29 @@
+import funkin.play.event.ScriptedSongEvent;
+
+class ${NAME} extends ScriptedSongEvent {
+  public function new() {
+    // Replace the `eventID` with your own event id !
+    super("eventID");
+  }
+
+  /**
+   *
+   */
+  override public function handleEvent(data:SongEventData) {
+
+  }
+
+  /**
+   *
+   */
+  public function getEventSchema():SongEventSchema
+  {
+    return [
+        {}
+    ];
+  }
+
+  override public function getIconPath():String {
+    return 'ui/chart-editor/events/default';
+  }
+}

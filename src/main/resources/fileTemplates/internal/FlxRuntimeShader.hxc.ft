@@ -1,0 +1,8 @@
+import funkin.modding.base.ScriptedFlxRuntimeShader;
+
+class ${NAME} extends ScriptedFlxRuntimeShader {
+  public function new() {
+    // Replace `fileName` with the shader file name (without .frag) !
+    super(Assets.getText(Paths.frag("fileName")));
+  }
+}

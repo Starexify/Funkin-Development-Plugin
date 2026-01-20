@@ -30,7 +30,15 @@
                   language="Haxe"/>
         <newProjectWizard.languageGenerator implementation="com.nova.funkindevplugin.projects.VSliceNewProjectWizard"/>
         <internalFileTemplate name="Module.hxc"/>
+        <internalFileTemplate name="Empty.hxc"/>
+        <internalFileTemplate name="Song.hxc"/>
+        <internalFileTemplate name="Stage.hxc"/>
+        <internalFileTemplate name="Level.hxc"/>
+        <internalFileTemplate name="SongEvent.hxc"/>
         <internalFileTemplate name="NoteKind.hxc"/>
+        <internalFileTemplate name="FunkinSprite.hxc"/>
+        <internalFileTemplate name="Character.hxc"/>
+        <internalFileTemplate name="FreeplayDJ.hxc"/>
     </extensions>
 
     <extensionPoints>

@@ -1,0 +1,8 @@
+import funkin.ui.story.ScriptedLevel;
+
+class ${NAME} extends ScriptedLevel {
+  public function new() {
+    // Replace the `levelID` with your level id (level file name) !
+    super("levelID");
+  }
+}

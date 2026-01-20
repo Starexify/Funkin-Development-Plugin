@@ -1,0 +1,8 @@
+import funkin.play.cutscene.dialogue.ScriptedConversation;
+
+class ${NAME} extends ScriptedConversation {
+  public function new() {
+    // Replace the `convID` with your conversation id (conversation file name) !
+    super("convID");
+  }
+}

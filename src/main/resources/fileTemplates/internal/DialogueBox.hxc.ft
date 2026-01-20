@@ -1,0 +1,8 @@
+import funkin.play.cutscene.dialogue.ScriptedDialogueBox;
+
+class ${NAME} extends ScriptedDialogueBox {
+  public function new() {
+    // Replace the `dboxID` with your conversation id (dialogue box file name) !
+    super("dboxID");
+  }
+}

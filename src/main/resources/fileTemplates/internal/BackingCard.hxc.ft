@@ -1,0 +1,8 @@
+import funkin.ui.freeplay.backcards.ScriptedBackingCard;
+
+class ${NAME} extends ScriptedBackingCard {
+  public function new() {
+    // Replace the `pcharID` with your character id (playable character file name) !
+    super("pcharID");
+  }
+}

@@ -1,0 +1,8 @@
+import funkin.play.stage.ScriptedStage;
+
+class ${NAME} extends ScriptedStage {
+  public function new() {
+    // Replace the `stageID` with your stage id (stage folder name) !
+    super("stageID");
+  }
+}
