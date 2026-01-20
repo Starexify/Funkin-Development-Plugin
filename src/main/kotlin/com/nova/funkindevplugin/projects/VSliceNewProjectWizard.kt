@@ -8,7 +8,7 @@ import com.intellij.openapi.module.GeneralModuleType
 import com.intellij.openapi.module.ModuleTypeManager
 import com.intellij.openapi.project.Project
 import com.intellij.plugins.haxe.ide.module.HaxeModuleType
-import com.nova.funkindevplugin.resources.VSliceIcons
+import icons.VSliceIcons
 import javax.swing.Icon
 
 class VSliceNewProjectWizard : LanguageGeneratorNewProjectWizard {

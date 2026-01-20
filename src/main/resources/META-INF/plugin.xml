@@ -7,7 +7,7 @@
     <name>Funkin Development</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor url="https://www.yourcompany.com">YourCompany</vendor>
+    <vendor url="">YourCompany</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
@@ -24,11 +24,13 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <fileType implementationClass="com.nova.funkindevplugin.HaxeScriptFileType"
+        <fileType implementationClass="com.nova.funkindevplugin.VSliceFileType"
                   name="Haxe Script File"
                   extensions="hxc"
                   language="Haxe"/>
         <newProjectWizard.languageGenerator implementation="com.nova.funkindevplugin.projects.VSliceNewProjectWizard"/>
+        <internalFileTemplate name="Module.hxc"/>
+        <internalFileTemplate name="NoteKind.hxc"/>
     </extensions>
 
     <extensionPoints>
@@ -36,4 +38,11 @@
                         interface="com.nova.funkindevplugin.projects.BuildSystemVSliceNewProjectWizard"
                         dynamic="true"/>
     </extensionPoints>
+
+    <actions>
+        <action id="VSlice.NewFunkinScript" class="com.nova.funkindevplugin.actions.NewVSliceFileAction"
+                icon="HaxeIcons.Class">
+            <add-to-group group-id="NewGroup" anchor="first"/>
+        </action>
+    </actions>
 </idea-plugin>

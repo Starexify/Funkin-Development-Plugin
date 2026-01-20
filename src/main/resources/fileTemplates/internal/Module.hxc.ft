@@ -1,0 +1,7 @@
+import funkin.modding.module.ScriptedModule;
+
+class ${NAME} extends ScriptedModule {
+  public function new() {
+    super("${NAME}");
+  }
+}
