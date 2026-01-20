@@ -8,7 +8,7 @@ import javax.swing.Icon
 
 class VSliceModuleType : ModuleType<VSliceModuleBuilder>(TYPE_ID) {
   companion object {
-    const val TYPE_ID = "HAXE_SCRIPT_MODULE"
+    const val TYPE_ID = "VSLICE_MODULE_TYPE"
 
     val INSTANCE: VSliceModuleType
       get() = ModuleTypeManager.getInstance().findByID(TYPE_ID) as VSliceModuleType
