@@ -1,10 +1,13 @@
 package com.nova.funkindevplugin.projectWizard
 
+import com.intellij.execution.RunManager
+import com.intellij.execution.configurations.ConfigurationTypeUtil
 import com.intellij.ide.highlighter.ModuleFileType
 import com.intellij.ide.projectWizard.NewProjectWizardCollector.Base.logAddSampleCodeChanged
 import com.intellij.ide.projectWizard.NewProjectWizardCollector.Base.logAddSampleCodeFinished
 import com.intellij.ide.util.projectWizard.ModuleBuilder
 import com.intellij.ide.wizard.AbstractNewProjectWizardStep
+import com.intellij.openapi.module.Module
 import com.intellij.ide.wizard.NewProjectWizardBaseData
 import com.intellij.ide.wizard.NewProjectWizardBaseData.Companion.baseData
 import com.intellij.ide.wizard.NewProjectWizardStep
@@ -18,6 +21,8 @@ import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.plugins.haxe.config.sdk.HaxeSdkType
+import com.intellij.plugins.haxe.runner.HaxeApplicationConfiguration
+import com.intellij.plugins.haxe.runner.HaxeRunConfigurationType
 import com.intellij.ui.UIBundle
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.Panel
@@ -112,10 +117,26 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
                 """.trimIndent()
 
           mainFile.setBinaryContent(content.toByteArray())
+
+          //createRunConfiguration(project, module)
         }
       }
     }
   }
+
+/*  fun createRunConfiguration(project: Project, module: Module) {
+    val runManager = RunManager.getInstance(project)
+
+    val type = ConfigurationTypeUtil.findConfigurationType(ShellConfigurationType::class.java)
+    val factory = type.configurationFactories[0]
+
+    val settings = runManager.createConfiguration("Run Funkin", factory)
+    val config = settings.configuration as ShellRunConfiguration
+
+
+    runManager.addConfiguration(settings)
+    runManager.selectedConfiguration = settings
+  }*/
 
   override fun setupProject(project: Project) {
     configureModuleBuilder(project, VSliceModelBuilder())
