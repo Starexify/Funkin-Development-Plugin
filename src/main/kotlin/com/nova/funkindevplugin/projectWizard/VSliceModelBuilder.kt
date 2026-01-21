@@ -1,27 +1,30 @@
 package com.nova.funkindevplugin.projectWizard
 
 import com.intellij.ide.util.projectWizard.ModuleBuilder
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.module.ModuleType
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.SdkTypeId
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.roots.OrderRootType
+import com.intellij.openapi.startup.StartupManager
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.plugins.haxe.config.sdk.HaxeSdkType
 import com.intellij.plugins.haxe.ide.module.HaxeModuleType
-import io.netty.util.internal.ResourcesUtil
 import java.nio.file.Path
 
 class VSliceModelBuilder : ModuleBuilder() {
   var libraryPath: String = ""
-  var addSampleCode: Boolean = true
+  var addSampleScript: Boolean = true
 
   override fun getModuleType(): ModuleType<*>? = HaxeModuleType.getInstance()
   override fun isSuitableSdkType(sdkType: SdkTypeId): Boolean = sdkType is HaxeSdkType
 
   override fun setupRootModel(modifiableRootModel: ModifiableRootModel) {
+    val project = modifiableRootModel.project
     if (moduleJdk != null) modifiableRootModel.sdk = moduleJdk else modifiableRootModel.inheritSdk()
 
     val contentEntry = doAddContentEntry(modifiableRootModel) ?: return
@@ -32,7 +35,6 @@ class VSliceModelBuilder : ModuleBuilder() {
 
     val rootFile = LocalFileSystem.getInstance().findFileByPath(rootPath) ?: return
     val scriptsFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(scriptsPath.toString())
-
     if (scriptsFile != null) contentEntry.addSourceFolder(scriptsFile, false)
 
     if (libraryPath.isNotEmpty()) {
@@ -43,18 +45,35 @@ class VSliceModelBuilder : ModuleBuilder() {
       libModel.commit()
     }
 
-    createProjectFiles(rootFile, scriptsFile)
+    val fileToOpen: VirtualFile? = createProjectFiles(rootFile, scriptsFile)
+    scheduleOpenFile(project, fileToOpen)
   }
 
-  private fun createProjectFiles(rootFile: VirtualFile, scriptsFile: VirtualFile?) {
+  private fun createProjectFiles(rootFile: VirtualFile, scriptsFile: VirtualFile?): VirtualFile? {
+    var createdMainFile: VirtualFile? = null
+
+    // MOD METADATA
     val jsonTemplate = getResourceFileContent("_polymod_meta.json").replace("{{NAME}}", name ?: "")
     val jsonFile = rootFile.createChildData(this, "_polymod_meta.json")
     jsonFile.setBinaryContent(jsonTemplate.toByteArray())
 
-    if (addSampleCode && scriptsFile != null) {
+    // SAMPLE SCRIPT
+    if (addSampleScript && scriptsFile != null) {
       val moduleTemplate = getResourceFileContent("MainModule.hxc")
       val hxcFile = scriptsFile.createChildData(this, "MainModule.hxc")
       hxcFile.setBinaryContent(moduleTemplate.trimIndent().toByteArray())
+      createdMainFile = hxcFile
+    }
+
+    return createdMainFile;
+  }
+
+  private fun scheduleOpenFile(project: Project, file: VirtualFile?) {
+    if (file == null) return
+
+    // StartupManager waits until the project window is actually visible
+    StartupManager.getInstance(project).runAfterOpened {
+      FileEditorManager.getInstance(project).openFile(file, true)
     }
   }
 

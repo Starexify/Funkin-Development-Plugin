@@ -34,6 +34,6 @@ class NewVSliceFileAction :
     newName: @NonNls String,
     templateName: @NonNls String?
   ): @NlsContexts.Command String? {
-    return "Create my Class: $newName"
+    return "Create new ScriptedClass: $newName"
   }
 }

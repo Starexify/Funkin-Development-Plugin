@@ -16,12 +16,12 @@ import com.intellij.openapi.roots.ui.configuration.JdkComboBox
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.plugins.haxe.config.sdk.HaxeSdkType
-import com.intellij.ui.UIBundle
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.Panel
 import com.intellij.ui.dsl.builder.bindSelected
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.whenStateChangedFromUi
+import com.nova.funkindevplugin.VSliceBundle
 import java.nio.file.Paths
 
 class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProjectWizardStep(parent),
@@ -40,7 +40,7 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
   )
 
   val addSampleCodeProperty = propertyGraph.property(true).bindBooleanStorage(ADD_SAMPLE_CODE_PROPERTY_NAME)
-  var addSampleCode by addSampleCodeProperty
+  var addSampleScript by addSampleCodeProperty
 
   val libraryPathProperty = propertyGraph.property("")
 
@@ -60,7 +60,7 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
     super.setupUI(builder)
     setupHaxeSdkUI(builder)
     setupModdingLibraryUI(builder)
-    setupSampleCodeUI(builder)
+    setupSampleScriptUI(builder)
   }
 
   fun setupModdingLibraryUI(builder: Panel) {
@@ -75,12 +75,12 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
     }
   }
 
-  fun setupSampleCodeUI(builder: Panel) {
+  fun setupSampleScriptUI(builder: Panel) {
     builder.row {
-      checkBox(UIBundle.message("label.project.wizard.new.project.add.sample.code"))
+      checkBox(VSliceBundle.message("vslice.label.project.wizard.new.project.add.sample.script"))
         .bindSelected(addSampleCodeProperty)
         .whenStateChangedFromUi { logAddSampleCodeChanged(it) }
-        .onApply { logAddSampleCodeFinished(addSampleCode) }
+        .onApply { logAddSampleCodeFinished(addSampleScript) }
     }
   }
 
@@ -94,20 +94,6 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
         }
     }
   }
-
-  /*  fun createRunConfiguration(project: Project, module: Module) {
-      val runManager = RunManager.getInstance(project)
-
-      val type = ConfigurationTypeUtil.findConfigurationType(ShellConfigurationType::class.java)
-      val factory = type.configurationFactories[0]
-
-      val settings = runManager.createConfiguration("Run Funkin", factory)
-      val config = settings.configuration as ShellRunConfiguration
-
-
-      runManager.addConfiguration(settings)
-      runManager.selectedConfiguration = settings
-    }*/
 
   override fun setupProject(project: Project) {
     configureModuleBuilder(project, VSliceModelBuilder())
@@ -125,7 +111,7 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
     builder.moduleJdk = jdkChooser.selectedJdk
 
     builder.libraryPath = libraryPathProperty.get()
-    builder.addSampleCode = addSampleCode
+    builder.addSampleScript = addSampleScript
 
     builder.commit(project)
   }
