@@ -1,4 +1,4 @@
-package com.nova.funkindevplugin.projects
+package com.nova.funkindevplugin.projectWizard
 
 import com.intellij.ide.wizard.NewProjectWizardStep
 import com.intellij.ide.wizard.language.LanguageGeneratorNewProjectWizard

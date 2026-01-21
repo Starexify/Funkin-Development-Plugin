@@ -28,7 +28,7 @@
                   name="Haxe Script File"
                   extensions="hxc"
                   language="Haxe"/>
-        <newProjectWizard.languageGenerator implementation="com.nova.funkindevplugin.projects.VSliceNewProjectWizard"/>
+        <newProjectWizard.languageGenerator implementation="com.nova.funkindevplugin.projectWizard.VSliceNewProjectWizard"/>
         <internalFileTemplate name="Module.hxc"/>
         <internalFileTemplate name="Empty.hxc"/>
         <internalFileTemplate name="Song.hxc"/>
