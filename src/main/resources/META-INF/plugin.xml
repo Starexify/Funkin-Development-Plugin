@@ -28,8 +28,6 @@
                   name="Haxe Script File"
                   extensions="hxc"
                   language="Haxe"/>
-        <moduleType id="VSLICE_MODULE_TYPE" implementationClass="com.nova.funkindevplugin.module.VSliceModuleType"/>
-        <moduleBuilder builderClass="com.nova.funkindevplugin.module.VSliceModuleBuilder" />
         <newProjectWizard.languageGenerator implementation="com.nova.funkindevplugin.projects.VSliceNewProjectWizard"/>
         <internalFileTemplate name="Module.hxc"/>
         <internalFileTemplate name="Empty.hxc"/>
@@ -42,12 +40,6 @@
         <internalFileTemplate name="Character.hxc"/>
         <internalFileTemplate name="FreeplayDJ.hxc"/>
     </extensions>
-
-    <extensionPoints>
-        <extensionPoint name="vslice.buildSystem"
-                        interface="com.nova.funkindevplugin.projects.BuildSystemVSliceNewProjectWizard"
-                        dynamic="true"/>
-    </extensionPoints>
 
     <actions>
         <action id="VSlice.NewFunkinScript" class="com.nova.funkindevplugin.actions.NewVSliceFileAction"
