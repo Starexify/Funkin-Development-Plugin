@@ -1,32 +1,26 @@
 package com.nova.funkindevplugin.projectWizard
 
-import com.intellij.execution.RunManager
-import com.intellij.execution.configurations.ConfigurationTypeUtil
 import com.intellij.ide.highlighter.ModuleFileType
 import com.intellij.ide.projectWizard.NewProjectWizardCollector.Base.logAddSampleCodeChanged
 import com.intellij.ide.projectWizard.NewProjectWizardCollector.Base.logAddSampleCodeFinished
-import com.intellij.ide.util.projectWizard.ModuleBuilder
 import com.intellij.ide.wizard.AbstractNewProjectWizardStep
-import com.intellij.openapi.module.Module
 import com.intellij.ide.wizard.NewProjectWizardBaseData
 import com.intellij.ide.wizard.NewProjectWizardBaseData.Companion.baseData
 import com.intellij.ide.wizard.NewProjectWizardStep
 import com.intellij.ide.wizard.NewProjectWizardStep.Companion.ADD_SAMPLE_CODE_PROPERTY_NAME
-import com.intellij.openapi.application.WriteAction
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.observable.util.bindBooleanStorage
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.roots.ui.configuration.JdkComboBox
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable
 import com.intellij.openapi.util.io.FileUtil
-import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.plugins.haxe.config.sdk.HaxeSdkType
-import com.intellij.plugins.haxe.runner.HaxeApplicationConfiguration
-import com.intellij.plugins.haxe.runner.HaxeRunConfigurationType
 import com.intellij.ui.UIBundle
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.Panel
 import com.intellij.ui.dsl.builder.bindSelected
+import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.whenStateChangedFromUi
 import java.nio.file.Paths
 
@@ -48,6 +42,8 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
   val addSampleCodeProperty = propertyGraph.property(true).bindBooleanStorage(ADD_SAMPLE_CODE_PROPERTY_NAME)
   var addSampleCode by addSampleCodeProperty
 
+  val libraryPathProperty = propertyGraph.property("")
+
   init {
     HaxeSdkType.getInstance().ensureSdk()
   }
@@ -63,7 +59,20 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
 
     super.setupUI(builder)
     setupHaxeSdkUI(builder)
+    setupModdingLibraryUI(builder)
     setupSampleCodeUI(builder)
+  }
+
+  fun setupModdingLibraryUI(builder: Panel) {
+    builder.row("Library Path:") {
+      val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
+        .withTitle("Select V-Slice Library Folder")
+        .withDescription("Choose the directory containing libraries for V-Slice modding.")
+
+      textFieldWithBrowseButton(descriptor, context.project)
+        .bindText(libraryPathProperty)
+        .align(AlignX.FILL)
+    }
   }
 
   fun setupSampleCodeUI(builder: Panel) {
@@ -86,7 +95,27 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
     }
   }
 
-  private fun configureModuleBuilder(project: Project, builder: ModuleBuilder) {
+  /*  fun createRunConfiguration(project: Project, module: Module) {
+      val runManager = RunManager.getInstance(project)
+
+      val type = ConfigurationTypeUtil.findConfigurationType(ShellConfigurationType::class.java)
+      val factory = type.configurationFactories[0]
+
+      val settings = runManager.createConfiguration("Run Funkin", factory)
+      val config = settings.configuration as ShellRunConfiguration
+
+
+      runManager.addConfiguration(settings)
+      runManager.selectedConfiguration = settings
+    }*/
+
+  override fun setupProject(project: Project) {
+    configureModuleBuilder(project, VSliceModelBuilder())
+
+    super.setupProject(project)
+  }
+
+  private fun configureModuleBuilder(project: Project, builder: VSliceModelBuilder) {
     val moduleFile = Paths.get(path, name, name + ModuleFileType.DOT_DEFAULT_EXTENSION)
 
     builder.name = name
@@ -95,52 +124,9 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
 
     builder.moduleJdk = jdkChooser.selectedJdk
 
-    WriteAction.run<Exception> {
-      val module = builder.commitModule(project, null)
+    builder.libraryPath = libraryPathProperty.get()
+    builder.addSampleCode = addSampleCode
 
-      if (addSampleCode && module != null) {
-        val root = LocalFileSystem.getInstance().findFileByPath(builder.contentEntryPath!!)
-
-        val scriptsDir = root?.findChild("scripts") ?: root?.createChildDirectory(this, "scripts")
-
-        scriptsDir?.let { dir ->
-          // Create a Main Module file
-          val mainFile = dir.createChildData(this, "MainModule.hxc")
-          val content = """
-                    import funkin.modding.module.ScriptedModule;
-                    
-                    class MainModule extends ScriptedModule {
-                        public function onCreate(event) {
-                            trace("Hello world!");
-                        }
-                    }
-                """.trimIndent()
-
-          mainFile.setBinaryContent(content.toByteArray())
-
-          //createRunConfiguration(project, module)
-        }
-      }
-    }
-  }
-
-/*  fun createRunConfiguration(project: Project, module: Module) {
-    val runManager = RunManager.getInstance(project)
-
-    val type = ConfigurationTypeUtil.findConfigurationType(ShellConfigurationType::class.java)
-    val factory = type.configurationFactories[0]
-
-    val settings = runManager.createConfiguration("Run Funkin", factory)
-    val config = settings.configuration as ShellRunConfiguration
-
-
-    runManager.addConfiguration(settings)
-    runManager.selectedConfiguration = settings
-  }*/
-
-  override fun setupProject(project: Project) {
-    configureModuleBuilder(project, VSliceModelBuilder())
-
-    super.setupProject(project)
+    builder.commit(project)
   }
 }
