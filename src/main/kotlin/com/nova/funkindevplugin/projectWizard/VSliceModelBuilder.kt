@@ -14,9 +14,14 @@ import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.plugins.haxe.config.sdk.HaxeSdkType
 import com.intellij.plugins.haxe.ide.module.HaxeModuleType
+import java.io.File
 import java.nio.file.Path
 
 class VSliceModelBuilder : ModuleBuilder() {
+  val iconName = "_polymod_icon.png"
+  val metaName = "_polymod_meta.json"
+
+  var modIconPath: String = ""
   var libraryPath: String = ""
   var addSampleScript: Boolean = true
 
@@ -53,9 +58,20 @@ class VSliceModelBuilder : ModuleBuilder() {
     var createdMainFile: VirtualFile? = null
 
     // MOD METADATA
-    val jsonTemplate = getResourceFileContent("_polymod_meta.json").replace("{{NAME}}", name ?: "")
-    val jsonFile = rootFile.createChildData(this, "_polymod_meta.json")
+    val jsonTemplate = getResourceFileContent(metaName).replace("{{NAME}}", name ?: "")
+    val jsonFile = rootFile.createChildData(this, metaName)
     jsonFile.setBinaryContent(jsonTemplate.toByteArray())
+
+    // MOD ICON
+    val iconBytes = if (modIconPath.isNotEmpty()) {
+      val file = File(modIconPath)
+      if (file.exists()) file.readBytes() else getResourceFileBytes(iconName)
+    } else getResourceFileBytes(iconName)
+
+    if (iconBytes.isNotEmpty()) {
+      val iconFile = rootFile.findChild(iconName) ?: rootFile.createChildData(this, iconName)
+      iconFile.setBinaryContent(iconBytes)
+    }
 
     // SAMPLE SCRIPT
     if (addSampleScript && scriptsFile != null) {
@@ -82,5 +98,11 @@ class VSliceModelBuilder : ModuleBuilder() {
     return this::class.java.classLoader.getResourceAsStream(path)
       ?.bufferedReader()
       ?.use { it.readText() } ?: ""
+  }
+
+  private fun getResourceFileBytes(fileName: String): ByteArray {
+    val path = "fileTemplates/projectWizard/$fileName"
+    return this::class.java.classLoader.getResourceAsStream(path)
+      ?.use { it.readAllBytes() } ?: ByteArray(0)
   }
 }

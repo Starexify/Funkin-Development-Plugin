@@ -40,9 +40,10 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
   )
 
   val addSampleCodeProperty = propertyGraph.property(true).bindBooleanStorage(ADD_SAMPLE_CODE_PROPERTY_NAME)
-  var addSampleScript by addSampleCodeProperty
-
   val libraryPathProperty = propertyGraph.property("")
+  val modIconPathProperty = propertyGraph.property("")
+
+  var addSampleScript by addSampleCodeProperty
 
   init {
     HaxeSdkType.getInstance().ensureSdk()
@@ -60,6 +61,7 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
     super.setupUI(builder)
     setupHaxeSdkUI(builder)
     setupModdingLibraryUI(builder)
+    setupModIconUI(builder)
     setupSampleScriptUI(builder)
   }
 
@@ -71,6 +73,19 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
 
       textFieldWithBrowseButton(descriptor, context.project)
         .bindText(libraryPathProperty)
+        .align(AlignX.FILL)
+    }
+  }
+
+  fun setupModIconUI(builder: Panel) {
+    builder.row("Mod Icon:") {
+      val descriptor = FileChooserDescriptorFactory.singleFile()
+        .withFileFilter { it.extension?.lowercase() == "png" }
+        .withTitle("Select your mod's Icon")
+        .withDescription("Choose the icon for your V-Slice mod.")
+
+      textFieldWithBrowseButton(descriptor, context.project)
+        .bindText(modIconPathProperty)
         .align(AlignX.FILL)
     }
   }
@@ -110,6 +125,7 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
 
     builder.moduleJdk = jdkChooser.selectedJdk
 
+    builder.modIconPath = modIconPathProperty.get()
     builder.libraryPath = libraryPathProperty.get()
     builder.addSampleScript = addSampleScript
 
