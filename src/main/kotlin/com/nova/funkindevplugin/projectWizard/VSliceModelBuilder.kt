@@ -1,5 +1,7 @@
 package com.nova.funkindevplugin.projectWizard
 
+import com.intellij.execution.RunManager
+import com.intellij.execution.configurations.ConfigurationTypeUtil
 import com.intellij.ide.util.projectWizard.ModuleBuilder
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.module.ModuleType
@@ -14,6 +16,7 @@ import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.plugins.haxe.config.sdk.HaxeSdkType
 import com.intellij.plugins.haxe.ide.module.HaxeModuleType
+import com.intellij.sh.run.ShRunConfiguration
 import java.io.File
 import java.nio.file.Path
 
@@ -34,6 +37,8 @@ class VSliceModelBuilder : ModuleBuilder() {
 
     val contentEntry = doAddContentEntry(modifiableRootModel) ?: return
     val rootPath = contentEntryPath ?: return
+    val ideaPath = Path.of(rootPath, ".idea")
+    contentEntry.addExcludeFolder(VfsUtil.pathToUrl(ideaPath.toString()))
 
     val scriptsPath = Path.of(rootPath, "scripts")
     FileUtil.createDirectory(scriptsPath.toFile())
@@ -41,6 +46,8 @@ class VSliceModelBuilder : ModuleBuilder() {
     val rootFile = LocalFileSystem.getInstance().findFileByPath(rootPath) ?: return
     val scriptsFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(scriptsPath.toString())
     if (scriptsFile != null) contentEntry.addSourceFolder(scriptsFile, false)
+
+    createRunConfiguration(project)
 
     if (libraryPath.isNotEmpty()) {
       val libraryTable = modifiableRootModel.moduleLibraryTable
@@ -52,6 +59,25 @@ class VSliceModelBuilder : ModuleBuilder() {
 
     val fileToOpen: VirtualFile? = createProjectFiles(rootFile, scriptsFile)
     scheduleOpenFile(project, fileToOpen)
+  }
+
+  private fun createRunConfiguration(project: Project) {
+    val runManager = RunManager.getInstance(project)
+
+    val factory = ConfigurationTypeUtil.findConfigurationType("ShConfigurationType")
+      ?.configurationFactories
+      ?.firstOrNull() ?: return
+
+    val settings = runManager.createConfiguration("Run Funkin", factory)
+    val runConfig = settings.configuration as ShRunConfiguration
+
+    runConfig.isExecuteScriptFile = false
+    runConfig.scriptText = "./Funkin"
+    runConfig.scriptWorkingDirectory = project.basePath ?: ""
+    runConfig.isExecuteInTerminal = true
+
+    runManager.addConfiguration(settings)
+    runManager.selectedConfiguration = settings
   }
 
   private fun createProjectFiles(rootFile: VirtualFile, scriptsFile: VirtualFile?): VirtualFile? {
