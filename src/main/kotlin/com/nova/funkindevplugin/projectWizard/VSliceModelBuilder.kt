@@ -63,6 +63,9 @@ class VSliceModelBuilder : ModuleBuilder() {
 
   private fun createRunConfiguration(project: Project) {
     val runManager = RunManager.getInstance(project)
+    val basePath = project.basePath ?: return
+
+    val targetPath = Path.of(basePath).parent?.parent?.toString() ?: basePath
 
     val factory = ConfigurationTypeUtil.findConfigurationType("ShConfigurationType")
       ?.configurationFactories
@@ -73,7 +76,7 @@ class VSliceModelBuilder : ModuleBuilder() {
 
     runConfig.isExecuteScriptFile = false
     runConfig.scriptText = "./Funkin"
-    runConfig.scriptWorkingDirectory = project.basePath ?: ""
+    runConfig.scriptWorkingDirectory = targetPath
     runConfig.isExecuteInTerminal = true
 
     runManager.addConfiguration(settings)
