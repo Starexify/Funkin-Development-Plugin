@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Polymod Metadata",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "The human-readable name of the mod."
+    },
+    "description": {
+      "type": "string",
+      "description": "A short description of the mod."
+    },
+    "author": {
+      "type": "string",
+      "description": "DEPRECATED: Please use 'contributors' instead.",
+      "deprecated": true
+    },
+    "contributors": {
+      "type": "array",
+      "description": "A list of contributors to the mod.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "role": { "type": "string" },
+          "email": { "type": "string", "format": "email" }
+        },
+        "required": ["name"]
+      }
+    },
+    "homepage": {
+      "type": "string",
+      "format": "uri",
+      "description": "A link to the homepage for a mod (download URL)."
+    },
+    "api_version": {
+      "type": "string",
+      "description": "API version number (e.g., '1.0.0'). Used for compatibility checks."
+    },
+    "mod_version": {
+      "type": "string",
+      "description": "Version number for the mod itself (Semantic Versioning)."
+    },
+    "license": {
+      "type": "string",
+      "description": "The name of a license determining the terms of use."
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Optional custom keys for application-specific information.",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "description": "Required mods that must be loaded first.",
+      "additionalProperties": { "type": "string" }
+    },
+    "optionalDependencies": {
+      "type": "object",
+      "description": "Mods that should be loaded after if they exist, but are not required.",
+      "additionalProperties": { "type": "string" }
+    }
+  },
+  "required": ["title", "api_version", "mod_version"]
+}

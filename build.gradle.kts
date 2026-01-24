@@ -25,6 +25,7 @@ dependencies {
 
         // Add necessary plugin dependencies for compilation here, example:
         bundledPlugin("com.intellij.java")
+        bundledPlugin("com.intellij.modules.json")
         bundledPlugin("com.jetbrains.sh")
         plugin("com.intellij.plugins.haxe:$htkVersion")
     }
