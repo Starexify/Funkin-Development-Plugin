@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Conversation Data",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "description": "Semantic version for conversation data." },
+    "backdrop": {
+      "type": "object",
+      "description": "Data on the backdrop behind the dialogue box.",
+      "oneOf": [
+        {
+          "properties": {
+            "type": { "const": "solid" },
+            "color": { "type": "string", "format": "color" },
+            "fadeTime": { "type": "number", "default": 0.0 }
+          },
+          "required": ["type", "color"]
+        }
+      ]
+    },
+    "outro": {
+      "type": "object",
+      "oneOf": [
+        {
+          "properties": { "type": { "const": "none" } },
+          "required": ["type"]
+        },
+        {
+          "properties": {
+            "type": { "const": "fade" },
+            "fadeTime": { "type": "number", "default": 1.0 }
+          },
+          "required": ["type"]
+        }
+      ]
+    },
+    "music": {
+      "type": "object",
+      "properties": {
+        "asset": { "type": "string" },
+        "fadeTime": { "type": "number", "default": 0.0 },
+        "looped": { "type": "boolean", "default": false }
+      },
+      "required": ["asset"]
+    },
+    "dialogue": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "speaker": { "type": "string" },
+          "speakerAnimation": { "type": "string" },
+          "box": { "type": "string" },
+          "boxAnimation": { "type": "string" },
+          "text": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "speed": { "type": "number", "default": 1.0 }
+        },
+        "required": ["speaker", "speakerAnimation", "box", "boxAnimation", "text"]
+      }
+    }
+  },
+  "required": ["backdrop", "dialogue"]
+}

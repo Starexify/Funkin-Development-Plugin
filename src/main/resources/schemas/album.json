@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Album Data",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Semantic version for album data."
+    },
+    "name": {
+      "type": "string",
+      "description": "Readable name of the album."
+    },
+    "artists": {
+      "type": "array",
+      "description": "Readable name of the artist(s) of the album.",
+      "items": { "type": "string" }
+    },
+    "albumArtAsset": {
+      "type": "string",
+      "description": "Asset key for the album art image."
+    },
+    "albumTitleAsset": {
+      "type": "string",
+      "description": "Asset key for the album title image or spritesheet."
+    },
+    "albumTitleOffsets": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2,
+      "default": [0, 0],
+      "description": "Offsets for the album title position."
+    },
+    "albumTitleAnimations": {
+      "type": "array",
+      "description": "Optional array of animations for the album title.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "prefix": { "type": "string" },
+          "offsets": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+          "fps": { "type": "integer", "default": 24 },
+          "loop": { "type": "boolean", "default": false }
+        },
+        "required": ["name", "prefix"]
+      }
+    }
+  },
+  "required": ["name", "artists", "albumArtAsset", "albumTitleAsset"]
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Freeplay Style Data",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Semantic version for style data."
+    },
+    "bgAsset": {
+      "type": "string",
+      "description": "Asset key for the background image."
+    },
+    "selectorAsset": {
+      "type": "string",
+      "description": "Asset key for the difficulty selector image."
+    },
+    "numbersAsset": {
+      "type": "string",
+      "description": "Asset key for the numbers shown at the top right."
+    },
+    "capsuleAsset": {
+      "type": "string",
+      "description": "Asset key for the freeplay capsules."
+    },
+    "capsuleTextColors": {
+      "type": "array",
+      "description": "Color data for the capsule text outline. Format: [DESELECTED, SELECTED]",
+      "items": {
+        "type": "string",
+        "format": "color"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "startDelay": {
+      "type": "number",
+      "description": "Delay time (seconds) after confirming song selection before gameplay starts."
+    }
+  },
+  "required": [
+    "bgAsset",
+    "selectorAsset",
+    "numbersAsset",
+    "capsuleAsset",
+    "capsuleTextColors",
+    "startDelay"
+  ]
+}

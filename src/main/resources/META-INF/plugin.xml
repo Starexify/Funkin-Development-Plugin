@@ -9,7 +9,7 @@
     <depends>com.jetbrains.sh</depends>
 
     <extensions defaultExtensionNs="JavaScript">
-        <JsonSchema.ProviderFactory implementation="com.nova.funkindevplugin.schema.PolymodJsonSchemaProviderFactory"/>
+        <JsonSchema.ProviderFactory implementation="com.nova.funkindevplugin.schemas.VSliceJsonSchemaProviderFactory"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">

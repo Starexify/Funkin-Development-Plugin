@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Story Level Data",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "The version number of the level data schema."
+    },
+    "name": {
+      "type": "string",
+      "description": "The title of the level, as seen in the top corner."
+    },
+    "titleAsset": {
+      "type": "string",
+      "description": "The graphic for the level name in the scrolling list."
+    },
+    "visible": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this week is visible in the story menu."
+    },
+    "background": {
+      "type": "string",
+      "format": "color",
+      "default": "#F9CF51",
+      "description": "The background hex color for the level."
+    },
+    "songs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["bopeebo"],
+      "description": "List of song IDs included in this level."
+    },
+    "props": {
+      "type": "array",
+      "description": "Characters or objects to display on the story menu.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "assetPath": { "type": "string" },
+          "scale": { "type": "number", "default": 1.0 },
+          "alpha": { "type": "number", "default": 1.0, "minimum": 0, "maximum": 1 },
+          "isPixel": { "type": "boolean", "default": false },
+          "danceEvery": { "type": "number", "default": 1.0 },
+          "offsets": {
+            "type": "array",
+            "items": { "type": "number" },
+            "minItems": 2,
+            "maxItems": 2,
+            "default": [0, 0]
+          },
+          "animations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "prefix": { "type": "string" },
+                "offsets": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+                "fps": { "type": "integer", "default": 24 },
+                "loop": { "type": "boolean", "default": false }
+              },
+              "required": ["name", "prefix"]
+            }
+          }
+        },
+        "required": ["assetPath"]
+      }
+    }
+  },
+  "required": ["name", "titleAsset", "songs"]
+}

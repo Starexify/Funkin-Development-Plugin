@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Player Data",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "description": "Semantic version of the player data." },
+    "name": { "type": "string", "default": "Unknown" },
+    "ownedChars": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "description": "Character IDs associated with this playable character."
+    },
+    "showUnownedChars": { "type": "boolean", "default": false },
+    "stickerPack": { "type": "string", "default": "default" },
+    "freeplayStyle": { "type": "string", "default": "bf" },
+    "unlocked": { "type": "boolean", "default": true },
+    "freeplayDJ": {
+      "type": ["object", "null"],
+      "properties": {
+        "assetPath": { "type": "string" },
+        "animations": { "$ref": "character.json#/properties/animations" },
+        "text1": { "type": "string", "default": "BOYFRIEND" },
+        "text2": { "type": "string", "default": "HOT BLOODED IN MORE WAYS THAN ONE" },
+        "text3": { "type": "string", "default": "PROTECT YO NUTS" },
+        "charSelect": {
+          "type": "object",
+          "properties": { "transitionDelay": { "type": "number", "default": 0.25 } }
+        },
+        "cartoon": {
+          "type": "object",
+          "properties": {
+            "soundClickFrame": { "type": "integer", "default": 80 },
+            "soundCartoonFrame": { "type": "integer", "default": 85 },
+            "loopBlinkFrame": { "type": "integer", "default": 112 },
+            "loopFrame": { "type": "integer", "default": 166 },
+            "channelChangeFrame": { "type": "integer", "default": 60 }
+          }
+        },
+        "fistPump": {
+          "type": "object",
+          "properties": {
+            "introStartFrame": { "type": "integer", "default": 0 },
+            "introEndFrame": { "type": "integer", "default": 4 },
+            "loopStartFrame": { "type": "integer", "default": 4 },
+            "loopEndFrame": { "type": "integer", "default": -1 },
+            "introBadStartFrame": { "type": "integer", "default": 0 },
+            "introBadEndFrame": { "type": "integer", "default": 4 },
+            "loopBadStartFrame": { "type": "integer", "default": 4 },
+            "loopBadEndFrame": { "type": "integer", "default": -1 }
+          }
+        }
+      },
+      "required": ["assetPath", "animations"]
+    },
+    "charSelect": {
+      "type": ["object", "null"],
+      "properties": {
+        "position": { "type": "integer", "minimum": 0, "maximum": 8 },
+        "gf": {
+          "type": "object",
+          "properties": {
+            "assetPath": { "type": "string" },
+            "animInfoPath": { "type": "string" },
+            "visualizer": { "type": "boolean", "default": false }
+          }
+        }
+      }
+    },
+    "results": {
+      "type": ["object", "null"],
+      "properties": {
+        "music": {
+          "type": "object",
+          "properties": {
+            "PERFECT_GOLD": { "type": "string" },
+            "PERFECT": { "type": "string" },
+            "EXCELLENT": { "type": "string" },
+            "GREAT": { "type": "string" },
+            "GOOD": { "type": "string" },
+            "SHIT": { "type": "string" }
+          }
+        },
+        "perfectGold": { "type": "array", "items": { "$ref": "#/$defs/resultAnim" } },
+        "perfect": { "type": "array", "items": { "$ref": "#/$defs/resultAnim" } },
+        "excellent": { "type": "array", "items": { "$ref": "#/$defs/resultAnim" } },
+        "great": { "type": "array", "items": { "$ref": "#/$defs/resultAnim" } },
+        "good": { "type": "array", "items": { "$ref": "#/$defs/resultAnim" } },
+        "loss": { "type": "array", "items": { "$ref": "#/$defs/resultAnim" } }
+      }
+    }
+  },
+  "required": ["name"],
+  "$defs": {
+    "resultAnim": {
+      "type": "object",
+      "properties": {
+        "renderType": { "type": "string", "enum": ["sparrow", "animate", "packer"] },
+        "assetPath": { "type": ["string", "null"] },
+        "scriptClass": { "type": ["string", "null"] },
+        "offsets": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2, "default": [0, 0] },
+        "filter": { "type": "string", "default": "both" },
+        "zIndex": { "type": "integer", "default": 500 },
+        "delay": { "type": "number", "default": 0.0 },
+        "scale": { "type": "number", "default": 1.0 },
+        "startFrameLabel": { "type": "string", "default": "" },
+        "sound": { "type": ["string", "null"], "default": "" },
+        "looped": { "type": "boolean", "default": true },
+        "loopFrame": { "type": ["integer", "null"] },
+        "loopFrameLabel": { "type": ["string", "null"] }
+      },
+      "required": ["renderType"]
+    }
+  }
+}

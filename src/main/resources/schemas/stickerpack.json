@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Sticker Pack Data",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Semantic version of the sticker set data."
+    },
+    "name": {
+      "type": "string",
+      "description": "Readable name of the sticker set."
+    },
+    "artist": {
+      "type": "string",
+      "description": "The artist who created this sticker set."
+    },
+    "stickers": {
+      "type": "array",
+      "description": "A list of asset paths for the sticker graphics.",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": ["name", "artist", "stickers"]
+}

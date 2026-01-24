@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Character Data",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "The semantic version number of the character data JSON format."
+    },
+    "name": {
+      "type": "string",
+      "description": "The readable name of the character."
+    },
+    "renderType": {
+      "type": "string",
+      "enum": ["sparrow", "packer", "multisparrow", "animateatlas", "custom"],
+      "default": "sparrow",
+      "description": "The type of rendering system to use for the character."
+    },
+    "assetPath": {
+      "type": "string",
+      "description": "Path to retrieve the spritesheet and data (XML/TXT/JSON) from."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1.0,
+      "description": "The scale of the graphic. Use higher values (e.g., 6) for pixel art."
+    },
+    "healthIcon": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "scale": { "type": "number" },
+        "flipX": { "type": "boolean", "default": false },
+        "isPixel": { "type": "boolean", "default": false },
+        "offsets": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 2,
+          "maxItems": 2,
+          "default": [0, 25]
+        }
+      }
+    },
+    "death": {
+      "type": "object",
+      "properties": {
+        "cameraOffsets": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "cameraZoom": { "type": "number", "default": 1.0 },
+        "preTransitionDelay": { "type": "number", "default": 0.0 }
+      }
+    },
+    "offsets": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2,
+      "default": [0, 0],
+      "description": "Global pixel offset for the character position."
+    },
+    "cameraOffsets": {
+      "type": "array",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2,
+      "default": [0, 0],
+      "description": "Offset the camera focus by this amount."
+    },
+    "isPixel": {
+      "type": "boolean",
+      "default": false,
+      "description": "Disables anti-aliasing if true."
+    },
+    "danceEvery": {
+      "type": "number",
+      "default": 1.0,
+      "description": "Frequency of idle animation in beats (0.25 precision)."
+    },
+    "singTime": {
+      "type": "number",
+      "default": 1.0,
+      "description": "Minimum duration of note animations in beats."
+    },
+    "animations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "prefix": { "type": "string" },
+          "offsets": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+          "fps": { "type": "integer", "default": 24 },
+          "loop": { "type": "boolean", "default": false }
+        }
+      }
+    },
+    "startingAnimation": {
+      "type": "string",
+      "default": "idle"
+    },
+    "flipX": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the entire sprite is flipped by default."
+    }
+  },
+  "required": ["name", "renderType", "assetPath"]
+}

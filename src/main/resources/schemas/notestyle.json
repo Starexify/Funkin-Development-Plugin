@@ -1,0 +1,135 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Note Style Data",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string" },
+    "name": { "type": "string" },
+    "author": { "type": "string" },
+    "fallback": { "type": [ "string", "null" ], "default": null },
+    "assets": {
+      "type": "object",
+      "properties": {
+        "note": {
+          "allOf": [{ "$ref": "#/$defs/assetBase" }],
+          "properties": { "data": { "$ref": "#/$defs/noteData" } }
+        },
+        "holdNote": { "$ref": "#/$defs/assetBase" },
+        "noteStrumline": {
+          "allOf": [{ "$ref": "#/$defs/assetBase" }],
+          "properties": { "data": { "$ref": "#/$defs/strumlineData" } }
+        },
+        "noteSplash": {
+          "allOf": [{ "$ref": "#/$defs/assetBase" }],
+          "properties": { "data": { "$ref": "#/$defs/splashData" } }
+        },
+        "holdNoteCover": {
+          "allOf": [{ "$ref": "#/$defs/assetBase" }],
+          "properties": { "data": { "$ref": "#/$defs/holdCoverData" } }
+        },
+        "countdownThree": { "$ref": "#/$defs/countdownAsset" },
+        "countdownTwo": { "$ref": "#/$defs/countdownAsset" },
+        "countdownOne": { "$ref": "#/$defs/countdownAsset" },
+        "countdownGo": { "$ref": "#/$defs/countdownAsset" },
+        "judgementSick": { "$ref": "#/$defs/assetBase" },
+        "judgementGood": { "$ref": "#/$defs/assetBase" },
+        "judgementBad": { "$ref": "#/$defs/assetBase" },
+        "judgementShit": { "$ref": "#/$defs/assetBase" },
+        "comboNumber0": { "$ref": "#/$defs/assetBase" },
+        "comboNumber1": { "$ref": "#/$defs/assetBase" },
+        "comboNumber2": { "$ref": "#/$defs/assetBase" },
+        "comboNumber3": { "$ref": "#/$defs/assetBase" },
+        "comboNumber4": { "$ref": "#/$defs/assetBase" },
+        "comboNumber5": { "$ref": "#/$defs/assetBase" },
+        "comboNumber6": { "$ref": "#/$defs/assetBase" },
+        "comboNumber7": { "$ref": "#/$defs/assetBase" },
+        "comboNumber8": { "$ref": "#/$defs/assetBase" },
+        "comboNumber9": { "$ref": "#/$defs/assetBase" }
+      }
+    }
+  },
+  "required": ["name", "author", "assets"],
+  "$defs": {
+    "assetBase": {
+      "type": "object",
+      "properties": {
+        "assetPath": { "type": "string" },
+        "scale": { "type": "number", "default": 1.0 },
+        "offsets": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+        "isPixel": { "type": "boolean", "default": false },
+        "alpha": { "type": "number", "default": 1.0 },
+        "animated": { "type": "boolean", "default": false }
+      }
+    },
+    "unnamedAnim": {
+      "type": "object",
+      "properties": {
+        "prefix": { "type": "string" },
+        "offsets": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+        "fps": { "type": "integer", "default": 24 },
+        "loop": { "type": "boolean", "default": false }
+      }
+    },
+    "countdownAsset": {
+      "allOf": [{ "$ref": "#/$defs/assetBase" }],
+      "properties": { "data": { "type": "object", "properties": { "audioPath": { "type": "string" } } } }
+    },
+    "noteData": {
+      "type": "object",
+      "properties": {
+        "left": { "$ref": "#/$defs/unnamedAnim" },
+        "down": { "$ref": "#/$defs/unnamedAnim" },
+        "up": { "$ref": "#/$defs/unnamedAnim" },
+        "right": { "$ref": "#/$defs/unnamedAnim" }
+      }
+    },
+    "strumlineData": {
+      "type": "object",
+      "properties": {
+        "leftStatic": { "$ref": "#/$defs/unnamedAnim" },
+        "leftPress": { "$ref": "#/$defs/unnamedAnim" },
+        "leftConfirm": { "$ref": "#/$defs/unnamedAnim" },
+        "downStatic": { "$ref": "#/$defs/unnamedAnim" },
+        "downPress": { "$ref": "#/$defs/unnamedAnim" },
+        "downConfirm": { "$ref": "#/$defs/unnamedAnim" },
+        "upStatic": { "$ref": "#/$defs/unnamedAnim" },
+        "upPress": { "$ref": "#/$defs/unnamedAnim" },
+        "upConfirm": { "$ref": "#/$defs/unnamedAnim" },
+        "rightStatic": { "$ref": "#/$defs/unnamedAnim" },
+        "rightPress": { "$ref": "#/$defs/unnamedAnim" },
+        "rightConfirm": { "$ref": "#/$defs/unnamedAnim" }
+      }
+    },
+    "splashData": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "framerateDefault": { "type": "integer", "default": 24 },
+        "blendMode": { "type": "string", "default": "normal" },
+        "leftSplashes": { "type": "array", "items": { "$ref": "#/$defs/unnamedAnim" } },
+        "downSplashes": { "type": "array", "items": { "$ref": "#/$defs/unnamedAnim" } },
+        "upSplashes": { "type": "array", "items": { "$ref": "#/$defs/unnamedAnim" } },
+        "rightSplashes": { "type": "array", "items": { "$ref": "#/$defs/unnamedAnim" } }
+      }
+    },
+    "holdCoverData": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "left": { "$ref": "#/$defs/holdCoverDir" },
+        "down": { "$ref": "#/$defs/holdCoverDir" },
+        "up": { "$ref": "#/$defs/holdCoverDir" },
+        "right": { "$ref": "#/$defs/holdCoverDir" }
+      }
+    },
+    "holdCoverDir": {
+      "type": "object",
+      "properties": {
+        "assetPath": { "type": "string" },
+        "start": { "$ref": "#/$defs/unnamedAnim" },
+        "hold": { "$ref": "#/$defs/unnamedAnim" },
+        "end": { "$ref": "#/$defs/unnamedAnim" }
+      }
+    }
+  }
+}
