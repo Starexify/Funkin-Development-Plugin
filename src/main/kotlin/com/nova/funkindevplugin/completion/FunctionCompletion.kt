@@ -15,7 +15,9 @@ import com.intellij.util.ProcessingContext
 
 class FunctionCompletion : CompletionContributor() {
   init {
-    val pattern = PlatformPatterns.psiElement().inside(HaxeMethod::class.java)
+    val pattern = PlatformPatterns.psiElement()
+      .inside(HaxeMethod::class.java)
+      .andNot(PlatformPatterns.psiElement().afterLeaf("."))
 
     extend(CompletionType.BASIC, pattern, object : CompletionProvider<CompletionParameters>() {
       override fun addCompletions(
