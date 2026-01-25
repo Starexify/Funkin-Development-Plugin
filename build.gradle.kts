@@ -7,7 +7,7 @@ plugins {
 val htkVersion: String by project
 
 group = "com.nova"
-version = "1.0-SNAPSHOT"
+version = providers.gradleProperty("version").getOrElse("0.0.1-SNAPSHOT")
 
 repositories {
     mavenCentral()
@@ -20,7 +20,8 @@ repositories {
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
 dependencies {
     intellijPlatform {
-        create("IC", "2025.1.4.1")
+        //create("IC", "2025.1.4.1")
+        intellijIdea("2025.3.2")
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
 
         // Add necessary plugin dependencies for compilation here, example:
