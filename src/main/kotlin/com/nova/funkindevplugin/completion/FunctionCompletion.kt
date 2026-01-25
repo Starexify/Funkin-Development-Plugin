@@ -26,7 +26,7 @@ class FunctionCompletion : CompletionContributor() {
         val traceLookup = LookupElementBuilder.create("trace")
           .withIcon(AllIcons.Nodes.Method)
           .withPresentableText("trace")
-          .withTailText("(v:Dynamic, ?infos:PosInfos) : Void", true)
+          .withTailText("(v:Dynamic, ?infos:PosInfos):Void", true)
           .withTypeText("Log to console")
           .withInsertHandler { ctx, _ ->
             val templateManager = TemplateManager.getInstance(ctx.project)

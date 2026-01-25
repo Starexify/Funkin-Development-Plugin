@@ -27,6 +27,7 @@ class VSliceModelBuilder : ModuleBuilder() {
   var modIconPath: String = ""
   var libraryPath: String = ""
   var addSampleScript: Boolean = true
+  var addBaseFolders: Boolean = false
 
   override fun getModuleType(): ModuleType<*>? = HaxeModuleType.getInstance()
   override fun isSuitableSdkType(sdkType: SdkTypeId): Boolean = sdkType is HaxeSdkType
@@ -39,6 +40,8 @@ class VSliceModelBuilder : ModuleBuilder() {
     val rootPath = contentEntryPath ?: return
     val ideaPath = Path.of(rootPath, ".idea")
     contentEntry.addExcludeFolder(VfsUtil.pathToUrl(ideaPath.toString()))
+
+    if (addBaseFolders) createBaseFolders(rootPath)
 
     val scriptsPath = Path.of(rootPath, "scripts")
     FileUtil.createDirectory(scriptsPath.toFile())
@@ -59,6 +62,43 @@ class VSliceModelBuilder : ModuleBuilder() {
 
     val fileToOpen: VirtualFile? = createProjectFiles(rootFile, scriptsFile)
     scheduleOpenFile(project, fileToOpen)
+  }
+
+  fun createBaseFolders(rootPath: String) {
+    val foldersToCreate = listOf(
+      "data/characters",
+      "data/dialogue/boxes",
+      "data/dialogue/conversations",
+      "data/dialogue/speakers",
+      "data/levels",
+      "data/notestyles",
+      "data/players",
+      "data/songs",
+      "data/stages",
+      "data/stickerpacks",
+      "data/ui/freeplay/albums",
+      "data/ui/freeplay/styles",
+      "images",
+      "music",
+      "shaders",
+      "sounds",
+      "shared/images",
+      "shared/music",
+      "shared/sounds",
+      "fonts",
+      "songs",
+      "videos/videos",
+    )
+
+    foldersToCreate.forEach { subPath ->
+      val dir = File(rootPath, subPath)
+      if (!dir.exists()) FileUtil.createDirectory(dir)
+    }
+
+    val rootFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(rootPath)
+    if (rootFile != null) {
+      VfsUtil.markDirtyAndRefresh(false, true, true, rootFile)
+    }
   }
 
   private fun createRunConfiguration(project: Project) {

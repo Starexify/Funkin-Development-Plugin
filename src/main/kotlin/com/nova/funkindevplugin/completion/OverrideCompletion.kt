@@ -56,7 +56,7 @@ class OverrideCompletion : CompletionContributor() {
           val lookupElement = LookupElementBuilder.create(methodName)
             .withIcon(AllIcons.Nodes.Method)
             .withPresentableText("$displayPrefix$methodName")
-            .withTailText(paramAndReturnType, true)
+            .withTailText("$paramAndReturnType {...}", true)
             .withTypeText(originClass, true)
             .withStrikeoutness(isDeprecated)
             .withLookupStrings(listOf(methodName, "override $methodName"))

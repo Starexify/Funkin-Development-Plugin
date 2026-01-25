@@ -16,8 +16,10 @@ import com.intellij.openapi.roots.ui.configuration.JdkComboBox
 import com.intellij.openapi.roots.ui.configuration.ProjectStructureConfigurable
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.plugins.haxe.config.sdk.HaxeSdkType
+import com.intellij.ui.UIBundle
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.Panel
+import com.intellij.ui.dsl.builder.TopGap
 import com.intellij.ui.dsl.builder.bindSelected
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.whenStateChangedFromUi
@@ -30,20 +32,15 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
   private val project = context.project ?: ProjectManager.getInstance().defaultProject
   private val sdksModel = ProjectStructureConfigurable.getInstance(project).projectJdksModel
 
-  private val jdkChooser = JdkComboBox(
-    context.project,
-    sdksModel,
-    { it is HaxeSdkType },
-    null,
-    null,
-    null
-  )
+  private val jdkChooser = JdkComboBox(context.project, sdksModel, { it is HaxeSdkType }, null, null, null)
 
   val addSampleCodeProperty = propertyGraph.property(true).bindBooleanStorage(ADD_SAMPLE_CODE_PROPERTY_NAME)
+  val addBaseFoldersProperty = propertyGraph.property(false)
   val libraryPathProperty = propertyGraph.property("")
   val modIconPathProperty = propertyGraph.property("")
 
   var addSampleScript by addSampleCodeProperty
+  var addBaseFolders by addBaseFoldersProperty
 
   init {
     HaxeSdkType.getInstance().ensureSdk()
@@ -59,10 +56,22 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
     }
 
     super.setupUI(builder)
+    setupSettingsUI(builder)
+    builder.collapsibleGroup(UIBundle.message("label.project.wizard.new.project.advanced.settings")) {
+      setupAdvancedSettingsUI(this)
+    }.topGap(TopGap.MEDIUM)
+  }
+
+  fun setupSettingsUI(builder: Panel) {
     setupHaxeSdkUI(builder)
     setupModdingLibraryUI(builder)
     setupModIconUI(builder)
     setupSampleScriptUI(builder)
+    setupBaseFoldersUI(builder)
+  }
+
+  fun setupAdvancedSettingsUI(builder: Panel) {
+
   }
 
   fun setupModdingLibraryUI(builder: Panel) {
@@ -99,12 +108,21 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
     }
   }
 
+  fun setupBaseFoldersUI(builder: Panel) {
+    builder.row {
+      checkBox(VSliceBundle.message("vslice.label.project.wizard.new.project.add.base.folders"))
+        .bindSelected(addBaseFoldersProperty)
+        .whenStateChangedFromUi { logAddSampleCodeChanged(it) }
+        .onApply { logAddSampleCodeFinished(addBaseFolders) }
+    }
+  }
+
   fun setupHaxeSdkUI(builder: Panel) {
     builder.row("Haxe SDK:") {
-      // Add the JdkComboBox directly to the DSL row
       cell(jdkChooser)
         .align(AlignX.FILL)
         .onApply {
+          sdksModel.apply()
           context.projectJdk = jdkChooser.selectedJdk
         }
     }
@@ -123,11 +141,20 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
     builder.moduleFilePath = FileUtil.toSystemDependentName(moduleFile.toString())
     builder.contentEntryPath = FileUtil.toSystemDependentName("$path/$name")
 
-    builder.moduleJdk = jdkChooser.selectedJdk
+    val selectedSdk = jdkChooser.selectedJdk
+    if (selectedSdk != null) {
+      sdksModel.apply()
+
+      val globalSdk = com.intellij.openapi.projectRoots.ProjectJdkTable.getInstance()
+        .findJdk(selectedSdk.name, selectedSdk.sdkType.name)
+
+      builder.moduleJdk = globalSdk ?: selectedSdk
+    }
 
     builder.modIconPath = modIconPathProperty.get()
     builder.libraryPath = libraryPathProperty.get()
     builder.addSampleScript = addSampleScript
+    builder.addBaseFolders = addBaseFolders
 
     builder.commit(project)
   }
