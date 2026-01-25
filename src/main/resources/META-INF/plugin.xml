@@ -21,6 +21,8 @@
                 implementation="com.nova.funkindevplugin.projectWizard.VSliceNewProjectWizard"/>
         <completion.contributor language="Haxe"
                                 implementationClass="com.nova.funkindevplugin.completion.OverrideCompletion"/>
+        <completion.contributor language="Haxe"
+                                implementationClass="com.nova.funkindevplugin.completion.FunctionCompletion"/>
         <internalFileTemplate name="Module.hxc"/>
         <internalFileTemplate name="Empty.hxc"/>
         <internalFileTemplate name="Song.hxc"/>
