@@ -8,7 +8,6 @@ import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.SdkTypeId
 import com.intellij.openapi.roots.ModifiableRootModel
-import com.intellij.openapi.roots.OrderRootType
 import com.intellij.openapi.startup.StartupManager
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.LocalFileSystem
@@ -17,6 +16,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.plugins.haxe.config.sdk.HaxeSdkType
 import com.intellij.plugins.haxe.ide.module.HaxeModuleType
 import com.intellij.sh.run.ShRunConfiguration
+import com.nova.funkindevplugin.VSliceLibraryManager
 import java.io.File
 import java.nio.file.Path
 
@@ -25,7 +25,6 @@ class VSliceModelBuilder : ModuleBuilder() {
   val metaName = "_polymod_meta.json"
 
   var modIconPath: String = ""
-  var libraryPath: String = ""
   var addSampleScript: Boolean = true
   var addBaseFolders: Boolean = false
 
@@ -52,18 +51,17 @@ class VSliceModelBuilder : ModuleBuilder() {
 
     createRunConfiguration(project)
 
-    if (libraryPath.isNotEmpty()) {
-      val libraryTable = modifiableRootModel.moduleLibraryTable
-      val library = libraryTable.createLibrary("V-Slice-Modding-Libs")
-      val libModel = library.modifiableModel
-      libModel.addRoot(VfsUtil.pathToUrl(FileUtil.toSystemDependentName(libraryPath)), OrderRootType.CLASSES)
-      libModel.commit()
-    }
+    setupLibraries(rootFile);
 
     val fileToOpen: VirtualFile? = createProjectFiles(rootFile, scriptsFile)
     scheduleOpenFile(project, fileToOpen)
   }
 
+  /**
+   * Creates the base folders such as `data`, `images`, `shared', `shaders` etc when creating a new project.
+   *
+   * @param rootPath The path to the project's root directory.
+   */
   fun createBaseFolders(rootPath: String) {
     val foldersToCreate = listOf(
       "data/characters",
@@ -98,6 +96,21 @@ class VSliceModelBuilder : ModuleBuilder() {
     val rootFile = LocalFileSystem.getInstance().refreshAndFindFileByPath(rootPath)
     if (rootFile != null) {
       VfsUtil.markDirtyAndRefresh(false, true, true, rootFile)
+    }
+  }
+
+  /**
+   * Creates the base folders such as `data`, `images`, `shared', `shaders` etc when creating a new project.
+   *
+   * @param project the project
+   * @param rootPath The path to the project's root directory.
+   */
+  fun setupLibraries(rootFile: VirtualFile) {
+    val configTemplate = getResourceFileContent("vslice-libraries.json")
+    if (configTemplate.isNotEmpty()) {
+      val configFile = rootFile.createChildData(this, VSliceLibraryManager.CONFIG_FILE_NAME)
+      configFile.setBinaryContent(configTemplate.toByteArray())
+      VfsUtil.markDirtyAndRefresh(false, true, true, configFile)
     }
   }
 

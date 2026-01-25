@@ -13,6 +13,9 @@
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup id="VSlice Notifications" displayType="BALLOON" bundle="messages.VSliceBundle"
+                           key="notification.group.vslice.notifications"/>
+        <postStartupActivity implementation="com.nova.funkindevplugin.build.VSliceLibrarySetup"/>
         <fileType implementationClass="com.nova.funkindevplugin.VSliceFileType"
                   name="Haxe Script File"
                   extensions="hxc"
@@ -40,5 +43,12 @@
                 icon="HaxeIcons.Class">
             <add-to-group group-id="NewGroup" anchor="first"/>
         </action>
+        <action id="vslice.downloadLibraries"
+                class="com.nova.funkindevplugin.actions.DownloadVSliceLibrariesAction"
+                icon="AllIcons.Actions.Download">
+            <add-to-group group-id="MainToolbarRight" anchor="before" relative-to-action="RunConfiguration"/>
+            <add-to-group group-id="BuildMenu" anchor="last"/>
+        </action>
     </actions>
+    <resource-bundle>messages.VSliceBundle</resource-bundle>
 </idea-plugin>

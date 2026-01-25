@@ -1,0 +1,15 @@
+{
+  "libraries": {
+    "polymod": "https://github.com/larsiusprime/polymod/archive/refs/heads/experimental.zip",
+    "funkin": "https://github.com/FunkinCrew/Funkin/archive/refs/heads/main.zip",
+    "flixel": "https://github.com/FunkinCrew/flixel/archive/refs/heads/mobile/main.zip",
+    "flixel-addons": "https://github.com/FunkinCrew/flixel-addons/archive/refs/heads/dev.zip",
+    "flixel-animate": "https://github.com/MaybeMaru/flixel-animate/archive/c61476f4b3a3d225631ab3065e4e925a4b63c076.zip",
+    "haxeui-core": "https://github.com/FunkinCrew/haxeui-core/archive/refs/heads/master.zip",
+    "haxeui-flixel": "https://github.com/haxeui/haxeui-flixel/archive/100f2c96beab619cfe72c567a058c41c71e3e998.zip"
+  },
+  "mergeInto": {
+    "flixel-addons": "flixel",
+    "flixel-animate": "flixel"
+  }
+}

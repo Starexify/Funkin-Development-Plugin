@@ -36,7 +36,6 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
 
   val addSampleCodeProperty = propertyGraph.property(true).bindBooleanStorage(ADD_SAMPLE_CODE_PROPERTY_NAME)
   val addBaseFoldersProperty = propertyGraph.property(false)
-  val libraryPathProperty = propertyGraph.property("")
   val modIconPathProperty = propertyGraph.property("")
 
   var addSampleScript by addSampleCodeProperty
@@ -64,7 +63,6 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
 
   fun setupSettingsUI(builder: Panel) {
     setupHaxeSdkUI(builder)
-    setupModdingLibraryUI(builder)
     setupModIconUI(builder)
     setupSampleScriptUI(builder)
     setupBaseFoldersUI(builder)
@@ -74,15 +72,14 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
 
   }
 
-  fun setupModdingLibraryUI(builder: Panel) {
-    builder.row("Library Path:") {
-      val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
-        .withTitle("Select V-Slice Library Folder")
-        .withDescription("Choose the directory containing libraries for V-Slice modding.")
-
-      textFieldWithBrowseButton(descriptor, context.project)
-        .bindText(libraryPathProperty)
+  fun setupHaxeSdkUI(builder: Panel) {
+    builder.row("Haxe SDK:") {
+      cell(jdkChooser)
         .align(AlignX.FILL)
+        .onApply {
+          sdksModel.apply()
+          context.projectJdk = jdkChooser.selectedJdk
+        }
     }
   }
 
@@ -117,17 +114,6 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
     }
   }
 
-  fun setupHaxeSdkUI(builder: Panel) {
-    builder.row("Haxe SDK:") {
-      cell(jdkChooser)
-        .align(AlignX.FILL)
-        .onApply {
-          sdksModel.apply()
-          context.projectJdk = jdkChooser.selectedJdk
-        }
-    }
-  }
-
   override fun setupProject(project: Project) {
     configureModuleBuilder(project, VSliceModelBuilder())
 
@@ -152,7 +138,6 @@ class VSliceNewProjectWizardStep(parent: NewProjectWizardStep) : AbstractNewProj
     }
 
     builder.modIconPath = modIconPathProperty.get()
-    builder.libraryPath = libraryPathProperty.get()
     builder.addSampleScript = addSampleScript
     builder.addBaseFolders = addBaseFolders
 
