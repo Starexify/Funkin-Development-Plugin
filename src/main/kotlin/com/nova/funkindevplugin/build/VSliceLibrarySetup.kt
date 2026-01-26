@@ -54,6 +54,8 @@ class VSliceLibrarySetup : ProjectActivity {
 
   private fun setupLibraries(project: Project, globalCache: File, config: LibraryConfig) {
     ApplicationManager.getApplication().runWriteAction {
+      if (project.isDisposed) return@runWriteAction
+
       val libraryTable = LibraryTablesRegistrar.getInstance().getLibraryTable(project)
       val tableModel = libraryTable.modifiableModel
 

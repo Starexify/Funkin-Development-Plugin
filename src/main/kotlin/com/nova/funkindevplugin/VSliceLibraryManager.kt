@@ -30,10 +30,10 @@ object VSliceLibraryManager {
     }
   }
 
-  fun downloadLibrary(name: String, url: String, outputDir: File): Boolean {
+  fun downloadLibrary(name: String, url: String, outputDir: File): DownloadStatus {
     if (outputDir.exists()) {
       LOG.info("$name already exists at ${outputDir.absolutePath}")
-      return true
+      return DownloadStatus.ALREADY_EXISTS
     }
 
     return try {
@@ -67,10 +67,10 @@ object VSliceLibraryManager {
       }
 
       LOG.info("Successfully downloaded $name")
-      true
+      DownloadStatus.DOWNLOADED
     } catch (e: Exception) {
       LOG.error("Failed to download $name", e)
-      false
+      DownloadStatus.FAILED
     }
   }
 
@@ -122,4 +122,8 @@ object VSliceLibraryManager {
 
     return libDir
   }
+}
+
+enum class DownloadStatus {
+  DOWNLOADED, ALREADY_EXISTS, FAILED
 }
