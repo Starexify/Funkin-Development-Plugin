@@ -13,6 +13,7 @@
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
+        <library.type implementation="com.nova.funkindevplugin.library.VSliceLibraryType"/>
         <postStartupActivity implementation="com.nova.funkindevplugin.build.VSliceLibrarySetup"/>
         <notificationGroup id="VSlice Notifications" displayType="BALLOON" bundle="messages.VSliceBundle"
                            key="notification.group.vslice.notifications"/>

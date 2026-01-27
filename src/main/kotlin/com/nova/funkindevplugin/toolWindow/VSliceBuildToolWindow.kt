@@ -52,9 +52,7 @@ class VSliceBuildToolWindow(private val project: Project) {
       // Add double-click handler
       addMouseListener(object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent) {
-          if (e.clickCount == 2) {
-            executeSelectedTask()
-          }
+          if (e.clickCount == 2) executeSelectedTask()
         }
       })
     }

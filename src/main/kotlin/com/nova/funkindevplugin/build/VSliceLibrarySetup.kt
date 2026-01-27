@@ -10,16 +10,16 @@ import com.intellij.openapi.roots.impl.libraries.LibraryEx
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar
 import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.vfs.VfsUtil
-import com.intellij.plugins.haxe.ide.library.HaxeLibraryType
 import com.nova.funkindevplugin.LibraryConfig
 import com.nova.funkindevplugin.VSliceLibraryManager
+import com.nova.funkindevplugin.library.VSliceLibraryType
 import java.io.File
 
 class VSliceLibrarySetup : ProjectActivity {
   private val LOG = logger<VSliceLibrarySetup>()
 
   companion object {
-    const val LIBRARY_NAME = "Funkin VSlice Dependencies"
+    const val LIBRARY_NAME = "VSlice Modding Libraries"
   }
 
   override suspend fun execute(project: Project) {
@@ -62,13 +62,13 @@ class VSliceLibrarySetup : ProjectActivity {
       var library = tableModel.getLibraryByName(LIBRARY_NAME)
 
       if (library == null) {
-        library = tableModel.createLibrary(LIBRARY_NAME)
+        library = tableModel.createLibrary(LIBRARY_NAME, VSliceLibraryType.VSLICE_KIND)
         LOG.info("Created library: $LIBRARY_NAME")
       }
 
       val libModel = library.modifiableModel
       if (libModel is LibraryEx.ModifiableModelEx) {
-        libModel.kind = HaxeLibraryType.HAXE_LIBRARY
+        libModel.kind = VSliceLibraryType.VSLICE_KIND
       }
 
       // Clear existing roots
