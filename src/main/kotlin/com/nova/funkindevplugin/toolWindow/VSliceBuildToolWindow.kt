@@ -1,29 +1,19 @@
 package com.nova.funkindevplugin.toolWindow
 
 import com.intellij.icons.AllIcons
-import com.intellij.notification.NotificationGroupManager
-import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DefaultActionGroup
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
-import com.intellij.openapi.progress.ProgressIndicator
-import com.intellij.openapi.progress.ProgressManager
-import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.treeStructure.Tree
-import com.nova.funkindevplugin.DownloadStatus
-import com.nova.funkindevplugin.VSliceLibraryManager
-import com.nova.funkindevplugin.build.VSliceLibrarySetup
 import com.nova.funkindevplugin.services.VSliceProjectService
 import java.awt.BorderLayout
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.io.File
 import javax.swing.JPanel
 import javax.swing.tree.DefaultMutableTreeNode
 
@@ -81,7 +71,7 @@ class VSliceBuildToolWindow(private val project: Project) {
 
     when (taskName) {
       "Update All" -> service.updateLibraries(true)
-      "Remove Unused" -> removeUnusedLibraries()
+      "Remove Unused" -> service.removeUnusedLibraries()
       "Build Mod" -> service.buildMod()
       else -> println("Executing task: $taskName")
     }
@@ -116,9 +106,5 @@ class VSliceBuildToolWindow(private val project: Project) {
         Messages.CANCEL -> return // User cancelled
       }
     }
-  }
-
-  private fun removeUnusedLibraries() {
-    // TODO: Implement logic to remove unused libraries
   }
 }

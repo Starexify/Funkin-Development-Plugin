@@ -3,6 +3,7 @@ package com.nova.funkindevplugin
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.Messages
 import java.io.File
 import java.net.URI
 import java.util.zip.ZipInputStream
@@ -17,6 +18,16 @@ object VSliceLibraryManager {
   private val gson = Gson()
 
   const val CONFIG_FILE_NAME = "vslice-libraries.json"
+
+  fun getGlobalCache(): File = File(System.getProperty("user.home"), ".vslice_libs_cache")
+
+  fun loadConfigOrShowError(project: Project): LibraryConfig? {
+    val config = loadConfig(project)
+    if (config == null) {
+      Messages.showErrorDialog(project, "Failed to load library configuration", "Error")
+    }
+    return config
+  }
 
   fun loadConfig(project: Project): LibraryConfig? {
     val configFile = File(project.basePath, CONFIG_FILE_NAME)

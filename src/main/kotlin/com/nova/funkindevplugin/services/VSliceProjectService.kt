@@ -184,13 +184,8 @@ class VSliceProjectService(private val project: Project) {
 
   // Library Related
   fun updateLibraries(clearCache: Boolean) {
-    val config = VSliceLibraryManager.loadConfig(project)
-    if (config == null) {
-      Messages.showErrorDialog(project, "Failed to load library configuration", "Error")
-      return
-    }
-
-    val globalCache = File(System.getProperty("user.home"), ".vslice_libs_cache")
+    val config = VSliceLibraryManager.loadConfigOrShowError(project) ?: return
+    val globalCache = VSliceLibraryManager.getGlobalCache()
 
     ProgressManager.getInstance().run(object : Task.Backgroundable(
       project,
@@ -276,6 +271,117 @@ class VSliceProjectService(private val project: Project) {
 
       override fun onThrowable(error: Throwable) {
         Messages.showErrorDialog(project, "Failed to download libraries: ${error.message}", "Error")
+      }
+    })
+  }
+
+  fun removeUnusedLibraries() {
+    val config = VSliceLibraryManager.loadConfigOrShowError(project) ?: return
+    val globalCache = VSliceLibraryManager.getGlobalCache()
+
+    if (!globalCache.exists()) {
+      NotificationGroupManager.getInstance()
+        .getNotificationGroup("VSlice Notifications")
+        .createNotification(
+          "No Libraries Found",
+          "Library cache does not exist.",
+          NotificationType.INFORMATION
+        )
+        .notify(project)
+      return
+    }
+
+    // Get all library folders in cache
+    val cachedLibraries = globalCache.listFiles()?.filter { it.isDirectory }?.map { it.name } ?: emptyList()
+
+    // Get libraries that should exist (from config)
+    val configuredLibraries = config.libraries.keys.toSet()
+
+    // Find unused libraries (in cache but not in config)
+    val unusedLibraries = cachedLibraries.filter { it !in configuredLibraries }
+
+    if (unusedLibraries.isEmpty()) {
+      NotificationGroupManager.getInstance()
+        .getNotificationGroup("VSlice Notifications")
+        .createNotification(
+          "No Unused Libraries",
+          "All cached libraries are currently in use.",
+          NotificationType.INFORMATION
+        )
+        .notify(project)
+      return
+    }
+
+    // Ask user for confirmation
+    val message = buildString {
+      append("The following libraries are not in your vslice-libraries.json and will be deleted:\n\n")
+      unusedLibraries.forEach { append("• $it\n") }
+      append("\nThis will free up disk space. Continue?")
+    }
+
+    val result = Messages.showYesNoDialog(
+      project,
+      message,
+      "Remove Unused Libraries",
+      "Remove ${unusedLibraries.size} Libraries",
+      "Cancel",
+      Messages.getWarningIcon()
+    )
+
+    if (result != Messages.YES) return
+
+    ProgressManager.getInstance().run(object : Task.Backgroundable(
+      project,
+      "Removing Unused Libraries",
+      true
+    ) {
+      private var removedCount = 0
+      private var failedCount = 0
+
+      override fun run(indicator: ProgressIndicator) {
+        unusedLibraries.forEachIndexed { index, libName ->
+          indicator.fraction = index.toDouble() / unusedLibraries.size
+          indicator.text = "Removing $libName..."
+
+          val libDir = File(globalCache, libName)
+          try {
+            if (libDir.exists()) {
+              libDir.deleteRecursively()
+              removedCount++
+            }
+          } catch (e: Exception) {
+            failedCount++
+            println("Failed to delete $libName: ${e.message}")
+          }
+        }
+
+        indicator.fraction = 1.0
+      }
+
+      override fun onSuccess() {
+        val message = buildString {
+          if (removedCount > 0) {
+            append("Successfully removed $removedCount unused libraries.")
+          }
+          if (failedCount > 0) {
+            append(" Failed to remove $failedCount libraries.")
+          }
+        }
+
+        val notificationType = if (failedCount > 0) NotificationType.WARNING else NotificationType.INFORMATION
+
+        NotificationGroupManager.getInstance()
+          .getNotificationGroup("VSlice Notifications")
+          .createNotification(
+            "Libraries Removed",
+            message,
+            notificationType
+          )
+          .notify(project)
+      }
+
+      override fun onThrowable(error: Throwable) {
+        Messages.showErrorDialog(project, "Failed to remove libraries: ${error.message}", "Error")
       }
     })
   }

@@ -44,8 +44,8 @@ class VSliceLibrarySetup : ProjectActivity {
   }
 
   fun runSetup(project: Project) {
-    val globalCache = File(System.getProperty("user.home"), ".vslice_libs_cache")
-    val config = VSliceLibraryManager.loadConfig(project) ?: return
+    val globalCache = VSliceLibraryManager.getGlobalCache()
+    val config = VSliceLibraryManager.loadConfigOrShowError(project) ?: return
 
     ApplicationManager.getApplication().invokeLater {
       setupLibraries(project, globalCache, config)
@@ -112,9 +112,7 @@ class VSliceLibrarySetup : ProjectActivity {
             it is com.intellij.openapi.roots.LibraryOrderEntry && it.libraryName == LIBRARY_NAME
           }
 
-          if (!hasLib) {
-            rootModel.addLibraryEntry(library)
-          }
+          if (!hasLib) rootModel.addLibraryEntry(library)
 
           rootModel.commit()
         }
