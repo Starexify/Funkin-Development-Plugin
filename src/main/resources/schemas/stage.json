@@ -3,8 +3,8 @@
   "title": "Stage Data",
   "type": "object",
   "properties": {
-    "version": { "type": "string" },
-    "name": { "type": "string", "default": "Unknown" },
+    "version": { "type": "string", "description": "Semantic version for stage data." },
+    "name": { "type": "string", "default": "Unknown", "description": "Readable name of the stage." },
     "cameraZoom": { "type": "number", "default": 1.0 },
     "directory": { "type": ["string", "null"], "default": "shared" },
     "characters": {
@@ -23,7 +23,13 @@
         "properties": {
           "name": { "type": "string" },
           "assetPath": { "type": "string", "description": "Asset path or hex color string for rectangles." },
-          "position": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+          "animType": {
+            "type": "string",
+            "enum": ["sparrow", "packer", "animateatlas"],
+            "default": "sparrow",
+            "description": "The animation type of the stage props"
+          },
+          "position": { "$ref": "common.json#/$defs/offset2D" },
           "zIndex": { "type": "integer", "default": 0 },
           "isPixel": { "type": "boolean", "default": false },
           "flipX": { "type": "boolean", "default": false },
@@ -36,10 +42,12 @@
           },
           "alpha": { "type": "number", "default": 1.0 },
           "danceEvery": { "type": "number", "default": 0.0 },
-          "scroll": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2, "default": [1, 1] },
-          "animations": { "$ref": "character.json#/properties/animations" },
+          "scroll": { "$ref": "common.json#/$defs/scroll2D" },
+          "animations": {
+            "type": "array",
+            "items": { "$ref": "common.json#/$defs/animation" }
+          },
           "startingAnimation": { "type": ["string", "null"] },
-          "animType": { "type": "string", "enum": ["sparrow", "packer"], "default": "sparrow" },
           "angle": { "type": "number", "default": 0.0 },
           "blend": { "type": "string", "default": "" },
           "color": { "type": "string", "format": "color", "default": "#FFFFFF" }
@@ -54,10 +62,10 @@
       "type": "object",
       "properties": {
         "zIndex": { "type": "integer", "default": 0 },
-        "position": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2, "default": [0, 0] },
+        "position": { "$ref": "common.json#/$defs/offset2D" },
         "scale": { "type": "number", "default": 1 },
-        "cameraOffsets": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
-        "scroll": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2, "default": [1, 1] },
+        "cameraOffsets": { "$ref": "common.json#/$defs/offset2D" },
+        "scroll": { "$ref": "common.json#/$defs/scroll2D" },
         "alpha": { "type": "number", "default": 1.0 },
         "angle": { "type": "number", "default": 0.0 }
       }

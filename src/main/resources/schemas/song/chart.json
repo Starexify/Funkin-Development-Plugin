@@ -3,8 +3,7 @@
   "title": "Song Chart Data",
   "type": "object",
   "properties": {
-    "version": { "type": "string" },
-    "generatedBy": { "type": "string" },
+    "version": { "type": "string", "description": "Semantic version for chart data." },
     "scrollSpeed": {
       "type": "object",
       "additionalProperties": { "type": "number" },
@@ -38,7 +37,8 @@
         }
       },
       "description": "Key is difficulty ID (e.g. 'normal')."
-    }
+    },
+    "generatedBy": { "type": "string" }
   },
   "required": ["notes"]
 }

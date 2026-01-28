@@ -3,43 +3,18 @@
   "title": "Speaker Data",
   "type": "object",
   "properties": {
-    "version": {
-      "type": "string",
-      "description": "Semantic version of the speaker data."
-    },
-    "name": {
-      "type": "string",
-      "description": "A human-readable name for the speaker."
-    },
-    "assetPath": {
-      "type": "string",
-      "description": "The path to the asset to use for the speaker's sprite."
-    },
+    "version": { "type": "string", "description": "Semantic version for speaker data." },
+    "name": { "type": "string", "default": "Unknown",  "description": "Readable name of the speaker." },
+    "assetPath": { "type": "string", "description": "The path to the asset to use for the speaker's sprite." },
     "flipX": { "type": "boolean", "default": false },
     "flipY": { "type": "boolean", "default": false },
     "isPixel": { "type": "boolean", "default": false },
     "scale": { "type": "number", "default": 1.0 },
-    "offsets": {
-      "type": "array",
-      "items": { "type": "number" },
-      "minItems": 2,
-      "maxItems": 2,
-      "default": [0, 0]
-    },
+    "offsets": { "$ref": "common.json#/$defs/offset2D" },
     "animations": {
       "type": "array",
       "description": "The available animations for the speaker.",
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string", "description": "Animation name (e.g., 'talk')" },
-          "prefix": { "type": "string", "description": "Prefix in the Sparrow XML/Atlas" },
-          "offsets": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
-          "fps": { "type": "integer", "default": 24 },
-          "loop": { "type": "boolean", "default": false }
-        },
-        "required": ["name", "prefix"]
-      }
+      "items": { "$ref": "common.json#/$defs/animation" }
     }
   },
   "required": ["name", "assetPath"]

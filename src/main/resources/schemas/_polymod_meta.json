@@ -3,14 +3,8 @@
   "title": "Polymod Metadata",
   "type": "object",
   "properties": {
-    "title": {
-      "type": "string",
-      "description": "The human-readable name of the mod."
-    },
-    "description": {
-      "type": "string",
-      "description": "A short description of the mod."
-    },
+    "title": { "type": "string", "description": "The readable title of the mod." },
+    "description": { "type": "string", "description": "A short description of the mod." },
     "author": {
       "type": "string",
       "description": "DEPRECATED: Please use 'contributors' instead.",
@@ -36,7 +30,7 @@
     },
     "api_version": {
       "type": "string",
-      "description": "API version number (e.g., '1.0.0'). Used for compatibility checks."
+      "description": "Funkin API version number (e.g., '0.8.0'). Used for compatibility checks."
     },
     "mod_version": {
       "type": "string",
@@ -49,9 +43,7 @@
     "metadata": {
       "type": "object",
       "description": "Optional custom keys for application-specific information.",
-      "additionalProperties": {
-        "type": "string"
-      }
+      "additionalProperties": { "type": "string" }
     },
     "dependencies": {
       "type": "object",

@@ -3,8 +3,8 @@
   "title": "Note Style Data",
   "type": "object",
   "properties": {
-    "version": { "type": "string" },
-    "name": { "type": "string" },
+    "version": { "type": "string", "description": "Semantic version for note style." },
+    "name": { "type": "string", "description": "Readable name of the note style." },
     "author": { "type": "string" },
     "fallback": { "type": [ "string", "null" ], "default": null },
     "assets": {

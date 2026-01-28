@@ -3,14 +3,8 @@
   "title": "Sticker Pack Data",
   "type": "object",
   "properties": {
-    "version": {
-      "type": "string",
-      "description": "Semantic version of the sticker set data."
-    },
-    "name": {
-      "type": "string",
-      "description": "Readable name of the sticker set."
-    },
+    "version": { "type": "string", "description": "Semantic version for sticker set data." },
+    "name": { "type": "string", "description": "Readable name of the sticker set." },
     "artist": {
       "type": "string",
       "description": "The artist who created this sticker set."

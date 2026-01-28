@@ -3,8 +3,8 @@
   "title": "Player Data",
   "type": "object",
   "properties": {
-    "version": { "type": "string", "description": "Semantic version of the player data." },
-    "name": { "type": "string", "default": "Unknown" },
+    "version": { "type": "string", "description": "Semantic version for player data." },
+    "name": { "type": "string", "default": "Unknown",  "description": "Readable name of the player." },
     "ownedChars": {
       "type": "array",
       "items": { "type": "string" },
@@ -95,10 +95,15 @@
     "resultAnim": {
       "type": "object",
       "properties": {
-        "renderType": { "type": "string", "enum": ["sparrow", "animate", "packer"] },
         "assetPath": { "type": ["string", "null"] },
+        "renderType": {
+          "type": "string",
+          "enum": ["sparrow", "packer", "multisparrow", "animateatlas", "multianimateatlas", "custom"],
+          "default": "animateatlas",
+          "description": "The render type of the player."
+        },
         "scriptClass": { "type": ["string", "null"] },
-        "offsets": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2, "default": [0, 0] },
+        "offsets": { "$ref": "common.json#/$defs/offset2D" },
         "filter": { "type": "string", "default": "both" },
         "zIndex": { "type": "integer", "default": 500 },
         "delay": { "type": "number", "default": 0.0 },
@@ -108,8 +113,7 @@
         "looped": { "type": "boolean", "default": true },
         "loopFrame": { "type": ["integer", "null"] },
         "loopFrameLabel": { "type": ["string", "null"] }
-      },
-      "required": ["renderType"]
+      }
     }
   }
 }

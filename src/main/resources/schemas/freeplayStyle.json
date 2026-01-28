@@ -3,10 +3,7 @@
   "title": "Freeplay Style Data",
   "type": "object",
   "properties": {
-    "version": {
-      "type": "string",
-      "description": "Semantic version for style data."
-    },
+    "version": { "type": "string", "description": "Semantic version for freeplay style data." },
     "bgAsset": {
       "type": "string",
       "description": "Asset key for the background image."

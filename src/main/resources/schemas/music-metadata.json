@@ -4,53 +4,17 @@
   "description": "Metadata for music tracks (like menus) that require timing but no gameplay data.",
   "type": "object",
   "properties": {
-    "version": {
-      "type": "string",
-      "description": "Semantic versioning string for the music data format."
-    },
-    "songName": {
-      "type": "string",
-      "default": "Unknown"
-    },
-    "artist": {
-      "type": "string",
-      "default": "Unknown"
-    },
-    "divisions": {
-      "type": ["integer", "null"],
-      "default": 96
-    },
-    "looped": {
-      "type": ["boolean", "null"],
-      "default": false
-    },
-    "generatedBy": {
-      "type": "string"
-    },
-    "timeFormat": {
-      "type": "string",
-      "enum": ["ms", "ticks", "float"],
-      "default": "ms"
-    },
+    "version": { "type": "string", "description": "Semantic version for music data." },
+    "songName": { "type": "string", "default": "Unknown" },
+    "artist": { "type": "string", "default": "Unknown" },
+    "divisions": { "type": ["integer", "null"], "default": 96 },
+    "looped": { "type": ["boolean", "null"], "default": false },
+    "timeFormat": { "type": "string", "enum": ["ms", "ticks", "float"], "default": "ms" },
     "timeChanges": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "t": { "type": "number", "description": "Timestamp (ms/ticks/float)" },
-          "bpm": { "type": "number", "description": "Beats Per Minute" },
-          "n": { "type": "integer", "default": 4, "description": "Time Signature Numerator" },
-          "d": { "type": "integer", "default": 4, "description": "Time Signature Denominator" },
-          "bt": {
-            "type": "array",
-            "items": { "type": "integer" },
-            "default": [4, 4, 4, 4],
-            "description": "Beat Tuplets"
-          }
-        },
-        "required": ["t", "bpm"]
-      }
-    }
+      "items": { "$ref": "common.json#/$defs/timeChange" }
+    },
+    "generatedBy": { "type": "string" }
   },
   "required": ["version", "songName", "artist", "timeFormat", "timeChanges"]
 }

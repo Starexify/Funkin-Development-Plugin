@@ -3,29 +3,11 @@
   "title": "Story Level Data",
   "type": "object",
   "properties": {
-    "version": {
-      "type": "string",
-      "description": "The version number of the level data schema."
-    },
-    "name": {
-      "type": "string",
-      "description": "The title of the level, as seen in the top corner."
-    },
-    "titleAsset": {
-      "type": "string",
-      "description": "The graphic for the level name in the scrolling list."
-    },
-    "visible": {
-      "type": "boolean",
-      "default": true,
-      "description": "Whether this week is visible in the story menu."
-    },
-    "background": {
-      "type": "string",
-      "format": "color",
-      "default": "#F9CF51",
-      "description": "The background hex color for the level."
-    },
+    "version": { "type": "string", "description": "Semantic version for level data." },
+    "name": { "type": "string", "description": "The title of the level, as seen in the top corner." },
+    "titleAsset": { "type": "string", "description": "The graphic for the level name in the scrolling list." },
+    "visible": { "type": "boolean", "default": true, "description": "Whether this week is visible in the story menu." },
+    "background": { "type": "string", "format": "color", "default": "#F9CF51", "description": "The background hex color for the level." },
     "songs": {
       "type": "array",
       "items": { "type": "string" },
@@ -43,26 +25,10 @@
           "alpha": { "type": "number", "default": 1.0, "minimum": 0, "maximum": 1 },
           "isPixel": { "type": "boolean", "default": false },
           "danceEvery": { "type": "number", "default": 1.0 },
-          "offsets": {
-            "type": "array",
-            "items": { "type": "number" },
-            "minItems": 2,
-            "maxItems": 2,
-            "default": [0, 0]
-          },
+          "offsets": { "$ref": "common.json#/$defs/offset2D" },
           "animations": {
             "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": { "type": "string" },
-                "prefix": { "type": "string" },
-                "offsets": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
-                "fps": { "type": "integer", "default": 24 },
-                "loop": { "type": "boolean", "default": false }
-              },
-              "required": ["name", "prefix"]
-            }
+            "items": { "$ref": "common.json#/$defs/animation" }
           }
         },
         "required": ["assetPath"]

@@ -3,13 +3,12 @@
   "title": "Song Metadata",
   "type": "object",
   "properties": {
-    "version": { "type": "string" },
+    "version": { "type": "string", "description": "Semantic version for song data." },
     "songName": { "type": "string", "default": "Unknown" },
     "artist": { "type": "string", "default": "Unknown" },
     "charter": { "type": ["string", "null"] },
     "divisions": { "type": "integer", "default": 96 },
     "looped": { "type": "boolean", "default": false },
-    "generatedBy": { "type": "string" },
     "timeFormat": { "enum": ["ms", "ticks", "float"], "default": "ms" },
     "offsets": {
       "type": "object",
@@ -41,18 +40,9 @@
     },
     "timeChanges": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "t": { "type": "number", "description": "Timestamp" },
-          "bpm": { "type": "number" },
-          "n": { "type": "integer", "default": 4, "description": "Time Sig Numerator" },
-          "d": { "type": "integer", "default": 4, "description": "Time Sig Denominator" },
-          "bt": { "type": "array", "items": { "type": "integer" }, "default": [4, 4, 4, 4] }
-        },
-        "required": ["t", "bpm"]
-      }
-    }
+      "items": { "$ref": "../common.json#/$defs/timeChange" }
+    },
+    "generatedBy": { "type": "string" }
   },
   "required": ["songName", "playData", "timeChanges"]
 }

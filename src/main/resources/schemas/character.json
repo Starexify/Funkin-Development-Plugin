@@ -3,29 +3,16 @@
   "title": "Character Data",
   "type": "object",
   "properties": {
-    "version": {
-      "type": "string",
-      "description": "The semantic version number of the character data JSON format."
-    },
-    "name": {
-      "type": "string",
-      "description": "The readable name of the character."
-    },
+    "version": { "type": "string", "description": "Semantic version for character data." },
+    "name": { "type": "string", "description": "Readable name of the character." },
     "renderType": {
       "type": "string",
-      "enum": ["sparrow", "packer", "multisparrow", "animateatlas", "custom"],
+      "enum": ["sparrow", "packer", "multisparrow", "animateatlas", "multianimateatlas", "custom"],
       "default": "sparrow",
-      "description": "The type of rendering system to use for the character."
+      "description": "Rendering system type of the character sprite."
     },
-    "assetPath": {
-      "type": "string",
-      "description": "Path to retrieve the spritesheet and data (XML/TXT/JSON) from."
-    },
-    "scale": {
-      "type": "number",
-      "default": 1.0,
-      "description": "The scale of the graphic. Use higher values (e.g., 6) for pixel art."
-    },
+    "assetPath": { "type": "string", "description": "Path to retrieve the spritesheet and data (XML/TXT/JSON) from." },
+    "scale": { "type": "number", "default": 1.0, "description": "The scale of the graphic. Use higher values (e.g., 6) for pixel art." },
     "healthIcon": {
       "type": "object",
       "properties": {
@@ -45,69 +32,25 @@
     "death": {
       "type": "object",
       "properties": {
-        "cameraOffsets": {
-          "type": "array",
-          "items": { "type": "number" },
-          "minItems": 2,
-          "maxItems": 2
-        },
+        "cameraOffsets": { "$ref": "common.json#/$defs/offset2D" },
         "cameraZoom": { "type": "number", "default": 1.0 },
         "preTransitionDelay": { "type": "number", "default": 0.0 }
       }
     },
-    "offsets": {
-      "type": "array",
-      "items": { "type": "number" },
-      "minItems": 2,
-      "maxItems": 2,
-      "default": [0, 0],
-      "description": "Global pixel offset for the character position."
-    },
+    "offsets": { "$ref": "common.json#/$defs/offset2D" },
     "cameraOffsets": {
-      "type": "array",
-      "items": { "type": "number" },
-      "minItems": 2,
-      "maxItems": 2,
-      "default": [0, 0],
+      "$ref": "common.json#/$defs/offset2D",
       "description": "Offset the camera focus by this amount."
     },
-    "isPixel": {
-      "type": "boolean",
-      "default": false,
-      "description": "Disables anti-aliasing if true."
-    },
-    "danceEvery": {
-      "type": "number",
-      "default": 1.0,
-      "description": "Frequency of idle animation in beats (0.25 precision)."
-    },
-    "singTime": {
-      "type": "number",
-      "default": 1.0,
-      "description": "Minimum duration of note animations in beats."
-    },
+    "isPixel": { "type": "boolean", "default": false, "description": "Disables anti-aliasing if true." },
+    "danceEvery": { "type": "number", "default": 1.0, "description": "Frequency of idle animation in beats (0.25 precision)." },
+    "singTime": { "type": "number", "default": 1.0, "description": "Minimum duration of note animations in beats." },
     "animations": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string" },
-          "prefix": { "type": "string" },
-          "offsets": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
-          "fps": { "type": "integer", "default": 24 },
-          "loop": { "type": "boolean", "default": false }
-        }
-      }
+      "items": { "$ref": "common.json#/$defs/animation" }
     },
-    "startingAnimation": {
-      "type": "string",
-      "default": "idle"
-    },
-    "flipX": {
-      "type": "boolean",
-      "default": false,
-      "description": "Whether the entire sprite is flipped by default."
-    }
+    "startingAnimation": { "type": "string", "default": "idle" },
+    "flipX": { "type": "boolean", "default": false, "description": "Whether the entire sprite is flipped on the x-axis by default." }
   },
   "required": ["name", "renderType", "assetPath"]
 }
