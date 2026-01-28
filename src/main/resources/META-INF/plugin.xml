@@ -23,10 +23,14 @@
                   language="Haxe"/>
         <newProjectWizard.languageGenerator
                 implementation="com.nova.funkindevplugin.projectWizard.VSliceNewProjectWizard"/>
+
+        <completion.contributor language="JSON"
+                                implementationClass="com.nova.funkindevplugin.completion.AssetPathCompletionContributor"/>
         <completion.contributor language="Haxe"
                                 implementationClass="com.nova.funkindevplugin.completion.OverrideCompletion"/>
         <completion.contributor language="Haxe"
                                 implementationClass="com.nova.funkindevplugin.completion.FunctionCompletion"/>
+
         <toolWindow id="VSlice Build" anchor="right" icon="/icons/v-slice-icon.svg"
                     factoryClass="com.nova.funkindevplugin.toolWindow.VSliceBuildToolWindowFactory"/>
 
