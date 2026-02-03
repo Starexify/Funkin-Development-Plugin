@@ -30,6 +30,8 @@
                                 implementationClass="com.nova.funkindevplugin.completion.OverrideCompletion"/>
         <completion.contributor language="Haxe"
                                 implementationClass="com.nova.funkindevplugin.completion.FunctionCompletion"/>
+        <completion.contributor language="Haxe"
+                                implementationClass="com.nova.funkindevplugin.completion.ConstructorCompletion"/>
 
         <toolWindow id="VSlice Build" anchor="right" icon="/icons/v-slice-icon.svg"
                     factoryClass="com.nova.funkindevplugin.toolWindow.VSliceBuildToolWindowFactory"/>
