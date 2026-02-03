@@ -3,12 +3,13 @@ package com.nova.funkindevplugin.projectWizard
 import com.intellij.execution.RunManager
 import com.intellij.execution.configurations.ConfigurationTypeUtil
 import com.intellij.ide.util.projectWizard.ModuleBuilder
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.application.ModalityState
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.SdkTypeId
 import com.intellij.openapi.roots.ModifiableRootModel
-import com.intellij.openapi.startup.StartupManager
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VfsUtil
@@ -166,13 +167,18 @@ class VSliceModelBuilder : ModuleBuilder() {
     return createdMainFile;
   }
 
-  private fun scheduleOpenFile(project: Project, file: VirtualFile?) {
+  /**
+   * Opens a file in the given project.
+   *
+   * @param project the project
+   * @param file The file to open when the project was opened
+   */
+  fun scheduleOpenFile(project: Project, file: VirtualFile?) {
     if (file == null) return
 
-    // StartupManager waits until the project window is actually visible
-    StartupManager.getInstance(project).runAfterOpened {
+    ApplicationManager.getApplication().invokeLater({
       FileEditorManager.getInstance(project).openFile(file, true)
-    }
+    }, ModalityState.nonModal())
   }
 
   private fun getResourceFileContent(fileName: String): String {
