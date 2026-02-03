@@ -25,7 +25,8 @@ class VSliceBuildToolWindow(private val project: Project) {
     val actionGroup = DefaultActionGroup().apply {
       add(BuildAction())
       add(UpdateLibrariesAction())
-      //addSeparator()
+      addSeparator()
+      add(GenerateConfigAction())
     }
 
     val toolbar = ActionManager.getInstance().createActionToolbar("VSliceBuildToolbar", actionGroup, true)
@@ -103,6 +104,14 @@ class VSliceBuildToolWindow(private val project: Project) {
         Messages.NO -> service.updateLibraries(clearCache = false)
         Messages.CANCEL -> return // User cancelled
       }
+    }
+  }
+
+  private inner class GenerateConfigAction :
+    AnAction("Init Libs File", "Generate vslice-libraries.json", AllIcons.Actions.Install) {
+    override fun actionPerformed(e: AnActionEvent) {
+      val service = project.service<VSliceProjectService>()
+      service.generateLibrariesJson()
     }
   }
 }

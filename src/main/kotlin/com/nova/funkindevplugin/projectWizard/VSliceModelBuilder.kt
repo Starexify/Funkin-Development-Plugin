@@ -22,7 +22,6 @@ import java.io.File
 import java.nio.file.Path
 
 class VSliceModelBuilder : ModuleBuilder() {
-  val librariesName = "vslice-libraries.json"
   val iconName = "_polymod_icon.png"
   val metaName = "_polymod_meta.json"
   val mainModule = "MainModule.hxc"
@@ -110,7 +109,7 @@ class VSliceModelBuilder : ModuleBuilder() {
    * @param rootPath The path to the project's root directory.
    */
   fun setupLibraries(rootFile: VirtualFile) {
-    val configTemplate = getResourceFileContent(librariesName)
+    val configTemplate = getResourceFileContent(VSliceLibraryManager.CONFIG_FILE_NAME)
     if (configTemplate.isNotEmpty()) {
       val configFile = rootFile.createChildData(this, VSliceLibraryManager.CONFIG_FILE_NAME)
       configFile.setBinaryContent(configTemplate.toByteArray())

@@ -8,13 +8,16 @@ import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VfsUtil
 import com.nova.funkindevplugin.DownloadStatus
 import com.nova.funkindevplugin.VSliceLibraryManager
 import com.nova.funkindevplugin.build.VSliceLibrarySetup
@@ -216,10 +219,12 @@ class VSliceProjectService(private val project: Project) {
               downloadedCount++
               indicator.text = "Downloaded $name"
             }
+
             DownloadStatus.ALREADY_EXISTS -> {
               skippedCount++
               indicator.text = "$name already exists"
             }
+
             DownloadStatus.FAILED -> {
               failedCount++
               indicator.text = "Failed to download $name"
@@ -380,6 +385,53 @@ class VSliceProjectService(private val project: Project) {
         Messages.showErrorDialog(project, "Failed to remove libraries: ${error.message}", "Error")
       }
     })
+  }
+
+  fun generateLibrariesJson() {
+    val projectBaseDir = project.guessProjectDir() ?: return
+    val configFileName = VSliceLibraryManager.CONFIG_FILE_NAME
+    val existingFile = projectBaseDir.findChild(configFileName)
+
+    if (existingFile != null) {
+      Messages.showInfoMessage(project, "$configFileName already exists!", "Info")
+      return
+    }
+
+    val configTemplate = getResourceFileContent(configFileName)
+    // Fallback
+    val contentToLine = if (configTemplate.isNotEmpty()) configTemplate else """
+        {
+          "libraries": {}
+        }
+    """.trimIndent()
+
+    WriteCommandAction.runWriteCommandAction(project) {
+      try {
+        val newFile = projectBaseDir.createChildData(this, configFileName)
+        newFile.setBinaryContent(contentToLine.toByteArray())
+
+        // Refresh so the IDE sees the new file immediately
+        VfsUtil.markDirtyAndRefresh(false, true, true, newFile)
+
+        NotificationGroupManager.getInstance()
+          .getNotificationGroup("VSlice Notifications")
+          .createNotification(
+            "Libraries File Generated",
+            "$configFileName has been generated from template.",
+            NotificationType.INFORMATION
+          ).notify(project)
+
+      } catch (e: Exception) {
+        Messages.showErrorDialog(project, "Failed to create config: ${e.message}", "Error")
+      }
+    }
+  }
+
+  fun getResourceFileContent(fileName: String): String {
+    val path = "fileTemplates/projectWizard/$fileName"
+    return this::class.java.classLoader.getResourceAsStream(path)
+      ?.bufferedReader()
+      ?.use { it.readText() } ?: ""
   }
 }
 

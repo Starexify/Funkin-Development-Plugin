@@ -4,7 +4,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.content.ContentFactory
-import com.nova.funkindevplugin.VSliceLibraryManager
 import java.io.File
 
 class VSliceBuildToolWindowFactory : ToolWindowFactory {
@@ -14,9 +13,8 @@ class VSliceBuildToolWindowFactory : ToolWindowFactory {
     toolWindow.contentManager.addContent(content)
   }
 
-  // Check if vslice-libraries.json exists
   override fun shouldBeAvailable(project: Project): Boolean {
-    val configFile = File(project.basePath, VSliceLibraryManager.CONFIG_FILE_NAME)
-    return configFile.exists()
+    val polymodMeta = File(project.basePath, "_polymod_meta.json")
+    return polymodMeta.exists()
   }
 }
