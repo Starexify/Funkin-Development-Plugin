@@ -6,7 +6,6 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.roots.OrderRootType
-import com.intellij.openapi.roots.impl.libraries.LibraryEx
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar
 import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.vfs.VfsUtil
@@ -60,44 +59,30 @@ class VSliceLibrarySetup : ProjectActivity {
       val tableModel = libraryTable.modifiableModel
 
       var library = tableModel.getLibraryByName(LIBRARY_NAME)
-
-      if (library == null) {
-        library = tableModel.createLibrary(LIBRARY_NAME, VSliceLibraryType.VSLICE_KIND)
-        LOG.info("Created library: $LIBRARY_NAME")
-      }
+      if (library == null) library = tableModel.createLibrary(LIBRARY_NAME, VSliceLibraryType.VSLICE_KIND)
 
       val libModel = library.modifiableModel
-      if (libModel is LibraryEx.ModifiableModelEx) {
-        libModel.kind = VSliceLibraryType.VSLICE_KIND
-      }
 
       // Clear existing roots
-      libModel.getUrls(OrderRootType.CLASSES).forEach {
-        libModel.removeRoot(it, OrderRootType.CLASSES)
-      }
-      libModel.getUrls(OrderRootType.SOURCES).forEach {
-        libModel.removeRoot(it, OrderRootType.SOURCES)
-      }
+      libModel.getUrls(OrderRootType.CLASSES).forEach { libModel.removeRoot(it, OrderRootType.CLASSES) }
+      libModel.getUrls(OrderRootType.SOURCES).forEach { libModel.removeRoot(it, OrderRootType.SOURCES) }
 
       // Add library source roots
-      config.libraries.keys
-        .filter { !config.mergeInto.containsKey(it) }
-        .forEach { name ->
-          val libDir = File(globalCache, name)
-          if (!libDir.exists()) {
-            return@forEach
-          }
-
-          val sourceRoot = VSliceLibraryManager.findHaxeSourceRoot(libDir)
-          VfsUtil.markDirtyAndRefresh(false, true, true, sourceRoot)
-          val vFile = VfsUtil.findFileByIoFile(sourceRoot, true)
-
+      config.libraries.keys.forEach { libName ->
+        val libDir = File(globalCache, libName)
+        if (libDir.exists()) {
+          VfsUtil.markDirtyAndRefresh(false, true, true, libDir)
+          val vFile = VfsUtil.findFileByIoFile(libDir, true)
           if (vFile != null) {
+            // Adding each individual lib folder as a root
             libModel.addRoot(vFile.url, OrderRootType.CLASSES)
             libModel.addRoot(vFile.url, OrderRootType.SOURCES)
-            LOG.info("Added roots for $name: ${vFile.url}")
+            LOG.info("Added root for $libName: ${vFile.url}")
           }
+        } else {
+          LOG.warn("Library directory missing for $libName at ${libDir.absolutePath}")
         }
+      }
 
       libModel.commit()
       tableModel.commit()
@@ -107,13 +92,10 @@ class VSliceLibrarySetup : ProjectActivity {
         .filter { it.moduleTypeName == "HAXE_MODULE" }
         .forEach { module ->
           val rootModel = ModuleRootManager.getInstance(module).modifiableModel
-
           val hasLib = rootModel.orderEntries.any {
             it is com.intellij.openapi.roots.LibraryOrderEntry && it.libraryName == LIBRARY_NAME
           }
-
           if (!hasLib) rootModel.addLibraryEntry(library)
-
           rootModel.commit()
         }
 

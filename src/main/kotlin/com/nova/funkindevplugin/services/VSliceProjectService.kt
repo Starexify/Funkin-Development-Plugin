@@ -216,12 +216,10 @@ class VSliceProjectService(private val project: Project) {
               downloadedCount++
               indicator.text = "Downloaded $name"
             }
-
             DownloadStatus.ALREADY_EXISTS -> {
               skippedCount++
               indicator.text = "$name already exists"
             }
-
             DownloadStatus.FAILED -> {
               failedCount++
               indicator.text = "Failed to download $name"
@@ -229,10 +227,8 @@ class VSliceProjectService(private val project: Project) {
           }
         }
 
-        indicator.text = "Merging libraries..."
-        config.mergeInto.forEach { (source, target) ->
-          VSliceLibraryManager.mergeLibraries(source, target, globalCache)
-        }
+        indicator.text = "Finalizing setup..."
+        indicator.fraction = 1.0
       }
 
       override fun onSuccess() {

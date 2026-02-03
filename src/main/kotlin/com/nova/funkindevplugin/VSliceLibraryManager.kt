@@ -10,7 +10,6 @@ import java.util.zip.ZipInputStream
 
 data class LibraryConfig(
   val libraries: Map<String, String>,
-  val mergeInto: Map<String, String> = emptyMap()
 )
 
 object VSliceLibraryManager {
@@ -19,7 +18,7 @@ object VSliceLibraryManager {
 
   const val CONFIG_FILE_NAME = "vslice-libraries.json"
 
-  fun getGlobalCache(): File = File(System.getProperty("user.home"), ".vslice_libs_cache")
+  fun getGlobalCache(): File = File(System.getProperty("user.home"), ".vslice_libs_cache/sources")
 
   fun loadConfigOrShowError(project: Project): LibraryConfig? {
     val config = loadConfig(project)
@@ -41,6 +40,7 @@ object VSliceLibraryManager {
     }
   }
 
+
   fun downloadLibrary(name: String, url: String, outputDir: File): DownloadStatus {
     if (outputDir.exists()) {
       LOG.info("$name already exists at ${outputDir.absolutePath}")
@@ -48,31 +48,24 @@ object VSliceLibraryManager {
     }
 
     return try {
-      LOG.info("Downloading $name from $url")
+      //LOG.info("Downloading $name from $url")
       outputDir.mkdirs()
-
-      val uri = URI(url)
-      val connection = uri.toURL().openConnection()
-      connection.connect()
+      val connection = URI(url).toURL().openConnection()
 
       ZipInputStream(connection.getInputStream()).use { zip ->
         var entry = zip.nextEntry
         while (entry != null) {
           if (!entry.isDirectory) {
-            var fileName = entry.name.substringAfter("/")
-            if (fileName.isNotEmpty() && (fileName.endsWith(".hx") || fileName.endsWith(".hxc"))) {
-              // Force .hxc to .hx
-              if (fileName.endsWith(".hxc")) {
-                fileName = fileName.substringBeforeLast(".") + ".hx"
-              }
+            val pathAfterRoot = entry.name.substringAfter("/")
+            val finalPath = stripSourceFolders(pathAfterRoot)
 
-              val file = File(outputDir, fileName)
+            if (finalPath.isNotEmpty() && (finalPath.endsWith(".hx") || finalPath.endsWith(".hxc"))) {
+              val file = File(outputDir, finalPath.replace(".hxc", ".hx"))
               file.parentFile?.mkdirs()
-              file.outputStream().use { output ->
-                zip.copyTo(output)
-              }
+              file.outputStream().use { zip.copyTo(it) }
             }
           }
+          zip.closeEntry()
           entry = zip.nextEntry
         }
       }
@@ -85,53 +78,14 @@ object VSliceLibraryManager {
     }
   }
 
-  fun mergeLibraries(sourceLib: String, targetLib: String, globalCache: File): Boolean {
-    val sourceDir = File(globalCache, sourceLib)
-    val targetDir = File(globalCache, targetLib)
-
-    if (!sourceDir.exists() || !targetDir.exists()) {
-      LOG.warn("Cannot merge: source or target missing")
-      return false
-    }
-
-    LOG.info("Merging $sourceLib into $targetLib")
-
-    val sourceRoot = findHaxeSourceRoot(sourceDir)
-    val targetRoot = findHaxeSourceRoot(targetDir)
-
-    return try {
-      var copiedCount = 0
-      sourceRoot.walkTopDown()
-        .filter { it.isFile && (it.extension == "hx" || it.extension == "hxc") }
-        .forEach { sourceFile ->
-          val relativePath = sourceFile.relativeTo(sourceRoot)
-          val targetFile = File(targetRoot, relativePath.path)
-          targetFile.parentFile?.mkdirs()
-          sourceFile.copyTo(targetFile, overwrite = true)
-          copiedCount++
-        }
-
-      LOG.info("Merged $copiedCount files from $sourceLib to $targetLib")
-      true
-    } catch (e: Exception) {
-      LOG.error("Failed to merge $sourceLib into $targetLib", e)
-      false
-    }
-  }
-
-  fun findHaxeSourceRoot(libDir: File): File {
-    val candidates = listOf(libDir.name, "source", "src", "Source", "Src", "flixel")
-
-    for (candidate in candidates) {
-      val potential = File(libDir, candidate)
-      if (potential.exists() && potential.isDirectory) {
-        if (potential.walkTopDown().maxDepth(3).any { it.extension == "hx" }) {
-          return potential
-        }
+  private fun stripSourceFolders(path: String): String {
+    val sourceDirs = listOf("source/", "src/", "Source/", "Src/")
+    for (dir in sourceDirs) {
+      if (path.startsWith(dir, ignoreCase = true)) {
+        return path.substring(dir.length)
       }
     }
-
-    return libDir
+    return path
   }
 }
 
