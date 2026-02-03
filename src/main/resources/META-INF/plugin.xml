@@ -33,6 +33,14 @@
         <completion.contributor language="Haxe"
                                 implementationClass="com.nova.funkindevplugin.completion.ConstructorCompletion"/>
 
+        <localInspection
+                language="Haxe"
+                groupName="Haxe audits"
+                enabledByDefault="true"
+                level="ERROR"
+                implementationClass="com.nova.funkindevplugin.inspection.BlacklistedImportInspection"
+                key="inspection.blacklisted.import.display.name"/>
+
         <toolWindow id="VSlice Build" anchor="right" icon="/icons/v-slice-icon.svg"
                     factoryClass="com.nova.funkindevplugin.toolWindow.VSliceBuildToolWindowFactory"/>
 
