@@ -22,8 +22,11 @@ import java.io.File
 import java.nio.file.Path
 
 class VSliceModelBuilder : ModuleBuilder() {
+  val librariesName = "vslice-libraries.json"
   val iconName = "_polymod_icon.png"
   val metaName = "_polymod_meta.json"
+  val mainModule = "MainModule.hxc"
+  val importHX = "import.hx"
 
   var modIconPath: String = ""
   var addSampleScript: Boolean = true
@@ -107,7 +110,7 @@ class VSliceModelBuilder : ModuleBuilder() {
    * @param rootPath The path to the project's root directory.
    */
   fun setupLibraries(rootFile: VirtualFile) {
-    val configTemplate = getResourceFileContent("vslice-libraries.json")
+    val configTemplate = getResourceFileContent(librariesName)
     if (configTemplate.isNotEmpty()) {
       val configFile = rootFile.createChildData(this, VSliceLibraryManager.CONFIG_FILE_NAME)
       configFile.setBinaryContent(configTemplate.toByteArray())
@@ -156,10 +159,17 @@ class VSliceModelBuilder : ModuleBuilder() {
       iconFile.setBinaryContent(iconBytes)
     }
 
+    // DEFAULT IMPORTS
+    if (scriptsFile != null) {
+      val importTemplate = getResourceFileContent(importHX)
+      val importFile = scriptsFile.createChildData(this, importHX)
+      importFile.setBinaryContent(importTemplate.toByteArray())
+    }
+
     // SAMPLE SCRIPT
     if (addSampleScript && scriptsFile != null) {
-      val moduleTemplate = getResourceFileContent("MainModule.hxc")
-      val hxcFile = scriptsFile.createChildData(this, "MainModule.hxc")
+      val moduleTemplate = getResourceFileContent(mainModule)
+      val hxcFile = scriptsFile.createChildData(this, mainModule)
       hxcFile.setBinaryContent(moduleTemplate.trimIndent().toByteArray())
       createdMainFile = hxcFile
     }

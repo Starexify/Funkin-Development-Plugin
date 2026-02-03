@@ -11,7 +11,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.util.ProcessingContext
 
-class AssetPathCompletionContributor : CompletionContributor() {
+class AssetPathCompletion : CompletionContributor() {
   init {
     extend(
       CompletionType.BASIC,
