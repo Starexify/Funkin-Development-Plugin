@@ -48,6 +48,9 @@ class BlacklistedImportInspection : LocalInspectionTool() {
   )
 
   override fun buildVisitor(holder: ProblemsHolder, isOnTheFly: Boolean): PsiElementVisitor {
+    val file = holder.file
+    if (!file.name.endsWith(".hxc", ignoreCase = true)) return PsiElementVisitor.EMPTY_VISITOR
+
     return object : HaxeVisitor() {
       // Check imports for blacklists
       override fun visitImportStatement(importStatement: HaxeImportStatement) {
