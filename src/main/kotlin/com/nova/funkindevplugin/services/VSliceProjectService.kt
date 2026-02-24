@@ -18,8 +18,8 @@ import com.intellij.openapi.project.guessProjectDir
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VfsUtil
-import com.nova.funkindevplugin.DownloadStatus
-import com.nova.funkindevplugin.VSliceLibraryManager
+import com.nova.funkindevplugin.libraries.DownloadStatus
+import com.nova.funkindevplugin.libraries.VSliceLibraryManager
 import com.nova.funkindevplugin.build.VSliceLibrarySetup
 import java.io.File
 import java.io.FileOutputStream

@@ -17,7 +17,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.plugins.haxe.config.sdk.HaxeSdkType
 import com.intellij.plugins.haxe.ide.module.HaxeModuleType
 import com.intellij.sh.run.ShRunConfiguration
-import com.nova.funkindevplugin.VSliceLibraryManager
+import com.nova.funkindevplugin.libraries.VSliceLibraryManager
 import java.io.File
 import java.nio.file.Path
 

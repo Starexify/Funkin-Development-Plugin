@@ -1,4 +1,4 @@
-package com.nova.funkindevplugin.library
+package com.nova.funkindevplugin.libraries
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.libraries.DummyLibraryProperties

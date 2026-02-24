@@ -1,4 +1,4 @@
-package com.nova.funkindevplugin
+package com.nova.funkindevplugin.libraries
 
 import com.google.gson.Gson
 import com.intellij.openapi.diagnostic.logger

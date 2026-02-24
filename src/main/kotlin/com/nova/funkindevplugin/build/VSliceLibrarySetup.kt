@@ -9,9 +9,9 @@ import com.intellij.openapi.roots.OrderRootType
 import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar
 import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.vfs.VfsUtil
-import com.nova.funkindevplugin.LibraryConfig
-import com.nova.funkindevplugin.VSliceLibraryManager
-import com.nova.funkindevplugin.library.VSliceLibraryType
+import com.nova.funkindevplugin.libraries.LibraryConfig
+import com.nova.funkindevplugin.libraries.VSliceLibraryManager
+import com.nova.funkindevplugin.libraries.VSliceLibraryType
 import java.io.File
 
 class VSliceLibrarySetup : ProjectActivity {
