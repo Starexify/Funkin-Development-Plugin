@@ -42,11 +42,7 @@ class VSliceProjectService(private val project: Project) {
     val fileName = "$modName-${modMeta?.mod_version}.zip"
     val zipFile = File(buildDir, fileName)
 
-    ProgressManager.getInstance().run(object : Task.Backgroundable(
-      project,
-      "Building Mod $modName",
-      true
-    ) {
+    ProgressManager.getInstance().run(object : Task.Backgroundable(project, "Building Mod $modName", true) {
       private var fileCount = 0
 
       override fun run(indicator: ProgressIndicator) {
@@ -74,15 +70,18 @@ class VSliceProjectService(private val project: Project) {
         indicator.text = "Creating zip file..."
 
         ZipOutputStream(FileOutputStream(zipFile)).use { zip ->
-          filesToZip.forEachIndexed { index, file ->
-            val relativePath = file.relativeTo(projectDir).path
-            indicator.fraction = 0.3 + (0.7 * index / filesToZip.size)
-            indicator.text = "Adding ${file.name}..."
+          val internalRoot = "$modName/"
 
-            zip.putNextEntry(ZipEntry(relativePath))
-            file.inputStream().use { input ->
-              input.copyTo(zip)
-            }
+          filesToZip.forEachIndexed { index, file ->
+            val relativePath = file.relativeTo(projectDir).path.replace(File.separator, "/")
+
+            val entryPath = internalRoot + relativePath
+
+            indicator.fraction = 0.3 + (0.7 * index / filesToZip.size)
+            indicator.text = "Adding $entryPath..."
+
+            zip.putNextEntry(ZipEntry(entryPath))
+            file.inputStream().use { input -> input.copyTo(zip) }
             zip.closeEntry()
             fileCount++
           }
