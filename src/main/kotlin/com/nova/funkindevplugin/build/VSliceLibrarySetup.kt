@@ -1,6 +1,7 @@
 package com.nova.funkindevplugin.build
 
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
@@ -12,6 +13,7 @@ import com.intellij.openapi.vfs.VfsUtil
 import com.nova.funkindevplugin.libraries.LibraryConfig
 import com.nova.funkindevplugin.libraries.VSliceLibraryManager
 import com.nova.funkindevplugin.libraries.VSliceLibraryType
+import com.nova.funkindevplugin.services.VSliceProjectService
 import java.io.File
 
 class VSliceLibrarySetup : ProjectActivity {
@@ -22,6 +24,9 @@ class VSliceLibrarySetup : ProjectActivity {
   }
 
   override suspend fun execute(project: Project) {
+    val service = project.service<VSliceProjectService>()
+    if (!service.hasAnyVSliceModule()) return
+
     val globalCache = File(System.getProperty("user.home"), ".vslice_libs_cache")
 
     // Only setup if cache exists (don't download on startup)

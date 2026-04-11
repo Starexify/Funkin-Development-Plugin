@@ -1,6 +1,7 @@
 package com.nova.funkindevplugin.libraries
 
 import com.google.gson.Gson
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
@@ -23,7 +24,9 @@ object VSliceLibraryManager {
   fun loadConfigOrShowError(project: Project): LibraryConfig? {
     val config = loadConfig(project)
     if (config == null) {
-      Messages.showErrorDialog(project, "Failed to load library configuration", "Error")
+      ApplicationManager.getApplication().invokeLater {
+        Messages.showErrorDialog(project, "Failed to load library configuration", "Error")
+      }
     }
     return config
   }

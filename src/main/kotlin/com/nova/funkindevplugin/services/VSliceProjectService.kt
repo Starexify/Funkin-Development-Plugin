@@ -10,14 +10,19 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.module.Module
+import com.intellij.openapi.module.ModuleManager
+import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.guessProjectDir
+import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VfsUtil
+import com.intellij.plugins.haxe.ide.module.HaxeModuleType
 import com.nova.funkindevplugin.libraries.DownloadStatus
 import com.nova.funkindevplugin.libraries.VSliceLibraryManager
 import com.nova.funkindevplugin.build.VSliceLibrarySetup
@@ -110,11 +115,9 @@ class VSliceProjectService(private val project: Project) {
       }
 
       override fun onThrowable(error: Throwable) {
-        Messages.showErrorDialog(
-          project,
-          "Failed to build mod: ${error.message}",
-          "Build Failed"
-        )
+        ApplicationManager.getApplication().invokeLater {
+          Messages.showErrorDialog(project, "Failed to build mod: ${error.message}", "Build Failed")
+        }
       }
     })
   }
@@ -270,7 +273,9 @@ class VSliceProjectService(private val project: Project) {
       }
 
       override fun onThrowable(error: Throwable) {
-        Messages.showErrorDialog(project, "Failed to download libraries: ${error.message}", "Error")
+        ApplicationManager.getApplication().invokeLater {
+          Messages.showErrorDialog(project, "Failed to download libraries: ${error.message}", "Error")
+        }
       }
     })
   }
@@ -381,7 +386,9 @@ class VSliceProjectService(private val project: Project) {
       }
 
       override fun onThrowable(error: Throwable) {
-        Messages.showErrorDialog(project, "Failed to remove libraries: ${error.message}", "Error")
+        ApplicationManager.getApplication().invokeLater {
+          Messages.showErrorDialog(project, "Failed to remove libraries: ${error.message}", "Error")
+        }
       }
     })
   }
@@ -420,8 +427,11 @@ class VSliceProjectService(private val project: Project) {
             NotificationType.INFORMATION
           ).notify(project)
 
-      } catch (e: Exception) {
-        Messages.showErrorDialog(project, "Failed to create config: ${e.message}", "Error")
+      }
+      catch (e: Exception) {
+        ApplicationManager.getApplication().invokeLater {
+          Messages.showErrorDialog(project, "Failed to create config: ${e.message}", "Error")
+        }
       }
     }
   }
@@ -432,6 +442,28 @@ class VSliceProjectService(private val project: Project) {
       ?.bufferedReader()
       ?.use { it.readText() } ?: ""
   }
+
+  // Module Related
+  private val validationCache = mutableMapOf<String, Boolean>()
+  fun isValidPolymodModule(module: Module): Boolean {
+    return validationCache.getOrPut(module.name) {
+      val isHaxe = ModuleType.get(module) is HaxeModuleType
+      if (!isHaxe) return@getOrPut false
+
+      val hasMetadata = ModuleRootManager.getInstance(module).contentRoots.any { root ->
+        root.findChild("_polymod_meta.json") != null
+      }
+
+      return@getOrPut hasMetadata
+    }
+  }
+
+  fun hasAnyVSliceModule(): Boolean {
+    val moduleManager = ModuleManager.getInstance(project)
+    return moduleManager.modules.any { isValidPolymodModule(it) }
+  }
+
+  fun invalidateCache() = validationCache.clear()
 }
 
 data class PolymodMeta(
